@@ -32,7 +32,7 @@ public class ExpertProductController {
      */
     @GetMapping("/page")
     public R page(Page<ExpertProduct> page, ExpertProduct expertProduct) {
-        return R.ok();
+        return R.ok(expertProductService.selectExpertProductPage(page, expertProduct));
     }
 
     @GetMapping("/{id}")

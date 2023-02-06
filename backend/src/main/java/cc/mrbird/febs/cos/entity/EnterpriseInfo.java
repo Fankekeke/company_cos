@@ -152,5 +152,8 @@ public class EnterpriseInfo implements Serializable {
      */
     private String createDate;
 
-
+    /**
+     * 企业照片
+     */
+    private String images;
 }
