@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author FanK
@@ -21,4 +22,12 @@ public interface ICollectInfoService extends IService<CollectInfo> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> selectCollectPage(Page<CollectInfo> page, CollectInfo collectInfo);
+
+    /**
+     * 根据企业编号获取收藏专家信息
+     *
+     * @param enterpriseCode 企业编号
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectCollectByEnterprise(String enterpriseCode);
 }

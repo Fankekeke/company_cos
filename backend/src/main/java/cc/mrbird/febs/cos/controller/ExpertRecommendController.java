@@ -3,6 +3,7 @@ package cc.mrbird.febs.cos.controller;
 
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.ExpertRecommend;
+import cc.mrbird.febs.cos.entity.vo.ExpertRecommendVo;
 import cc.mrbird.febs.cos.service.IExpertRecommendService;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -26,13 +27,36 @@ public class ExpertRecommendController {
     /**
      * 分页获取专家推荐信息
      *
-     * @param page 分页对象
+     * @param page            分页对象
      * @param expertRecommend 专家推荐信息
      * @return 结果
      */
     @GetMapping("/page")
     public R page(Page<ExpertRecommend> page, ExpertRecommend expertRecommend) {
         return R.ok(expertRecommendService.selectExpertRecommendPage(page, expertRecommend));
+    }
+
+    /**
+     * 专家推荐审核
+     *
+     * @param auditId 审核ID
+     * @param status  审核结果
+     * @return 结果
+     */
+    @GetMapping("/audit")
+    public R auditExpertRecommend(@RequestParam("auditId") Integer auditId, @RequestParam("status") Integer status) {
+        return R.ok(expertRecommendService.auditExpertRecommend(auditId, status));
+    }
+
+    /**
+     * 审核通过后发布
+     *
+     * @param auditId 审核ID
+     * @return 结果
+     */
+    @GetMapping("/release/{auditId}")
+    public R release(@PathVariable("auditId") Integer auditId) {
+        return R.ok(expertRecommendService.release(auditId));
     }
 
     @GetMapping("/{id}")
@@ -52,9 +76,8 @@ public class ExpertRecommendController {
      * @return 结果
      */
     @PostMapping
-    public R save(ExpertRecommend expertRecommend) {
-        expertRecommend.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(expertRecommendService.save(expertRecommend));
+    public R save(ExpertRecommendVo expertRecommend) {
+        return R.ok(expertRecommendService.recommendBatch(expertRecommend));
     }
 
     /**

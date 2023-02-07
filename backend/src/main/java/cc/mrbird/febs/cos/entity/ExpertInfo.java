@@ -127,5 +127,13 @@ public class ExpertInfo implements Serializable {
      */
     private String code;
 
+    /**
+     * 是否开启 1.开启 0.关闭
+     */
+    private Integer openFlag;
 
+    /**
+     * 是否注册 0.否 1.是
+     */
+    private Integer hasExist;
 }

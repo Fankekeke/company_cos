@@ -25,11 +25,13 @@
         ei.fixed_telephone,
         ei.profile,
         ei.create_date,
-        ei.code
+        ei.code,
+        ei.open_flag
         from
         expert_info ei
         where
         1 = 1
+        AND ei.open_flag = '1'
         <if test="expertInfo.name != null and expertInfo.name != ''">
             AND ei.name LIKE CONCAT('%',#{expertInfo.name},'%')
         </if>

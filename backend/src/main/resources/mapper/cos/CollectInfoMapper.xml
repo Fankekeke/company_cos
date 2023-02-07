@@ -29,6 +29,43 @@
         </if>
         order by
         ci.create_date desc
+    </select>
 
+    <!-- 根据企业编号获取收藏专家信息 -->
+    <select id="selectCollectByEnterprise" resultType="java.util.LinkedHashMap">
+        select
+        ci.id,
+        ci.expert_code,
+        ci.enterprise_code,
+        ci.create_date,
+        ei.name,
+        ei.nationality,
+        ei.images,
+        ei.sex,
+        ei.political_status,
+        ei.native_place,
+        ei.employer,
+        ei.`position`,
+        ei.address,
+        ei.phone,
+        ei.level_one,
+        ei.level_two,
+        ei.birth_date,
+        ei.job_title,
+        ei.special_appellation,
+        ei.mail,
+        ei.fixed_telephone,
+        ei.profile
+        from
+        collect_info ci
+        left join expert_info ei on
+        (ei.code = ci.expert_code)
+        left join enterprise_info ei2 on
+        (ei2.code = ci.enterprise_code)
+        where
+        1 = 1
+        AND ci.enterprise_code = #{enterpriseCode}
+        order by
+        ci.create_date desc
     </select>
 </mapper>

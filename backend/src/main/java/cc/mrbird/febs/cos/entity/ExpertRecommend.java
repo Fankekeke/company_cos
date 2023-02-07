@@ -132,5 +132,8 @@ public class ExpertRecommend implements Serializable {
      */
     private Integer status;
 
-
+    /**
+     * 专家编号
+     */
+    private String code;
 }

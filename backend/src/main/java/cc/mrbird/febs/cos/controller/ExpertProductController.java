@@ -26,13 +26,24 @@ public class ExpertProductController {
     /**
      * 分页获取项目成果信息
      *
-     * @param page 分页对象
+     * @param page          分页对象
      * @param expertProduct 项目成果信息
      * @return 结果
      */
     @GetMapping("/page")
     public R page(Page<ExpertProduct> page, ExpertProduct expertProduct) {
         return R.ok(expertProductService.selectExpertProductPage(page, expertProduct));
+    }
+
+    /**
+     * 根据专家编号获取项目成果
+     *
+     * @param expertCode 专家编号
+     * @return 结果
+     */
+    @GetMapping("/list/{expertCode}")
+    public R selectProductByExpert(@PathVariable("expertCode") String expertCode) {
+        return R.ok(expertProductService.selectProductByExpert(expertCode));
     }
 
     @GetMapping("/{id}")

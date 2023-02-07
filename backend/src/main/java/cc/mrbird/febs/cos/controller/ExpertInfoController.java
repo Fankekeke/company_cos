@@ -26,13 +26,24 @@ public class ExpertInfoController {
     /**
      * 分页获取专家信息
      *
-     * @param page 分页对象
+     * @param page       分页对象
      * @param expertInfo 专家信息
      * @return 结果
      */
     @GetMapping("/page")
     public R page(Page<ExpertInfo> page, ExpertInfo expertInfo) {
         return R.ok(expertInfoService.selectExpertPage(page, expertInfo));
+    }
+
+    /**
+     * 根据企业编号获取推荐专家
+     *
+     * @param enterpriseCode 企业编号
+     * @return 结果
+     */
+    @GetMapping("/recommend/{enterpriseCode}")
+    public R selectExpertRecommend(@PathVariable("enterpriseCode") String enterpriseCode) {
+        return R.ok(expertInfoService.selectExpertRecommend(enterpriseCode));
     }
 
     @GetMapping("/{id}")
@@ -54,6 +65,8 @@ public class ExpertInfoController {
     @PostMapping
     public R save(ExpertInfo expertInfo) {
         expertInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        expertInfo.setOpenFlag(1);
+        expertInfo.setHasExist(1);
         return R.ok(expertInfoService.save(expertInfo));
     }
 

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author FanK
@@ -21,4 +22,12 @@ public interface IEnterpriseInfoService extends IService<EnterpriseInfo> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> selectEnterprisePage(Page<EnterpriseInfo> page, EnterpriseInfo enterpriseInfo);
+
+    /**
+     * 根据专家编号获取推荐企业
+     *
+     * @param expertCode 专家编号
+     * @return 结果
+     */
+    List<EnterpriseInfo> selectEnterpriseRecommend(String expertCode);
 }

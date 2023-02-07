@@ -26,13 +26,24 @@ public class EnterpriseInfoController {
     /**
      * 分页获取企业信息
      *
-     * @param page 分页对象
+     * @param page           分页对象
      * @param enterpriseInfo 企业信息
      * @return 结果
      */
     @GetMapping("/page")
     public R page(Page<EnterpriseInfo> page, EnterpriseInfo enterpriseInfo) {
         return R.ok(enterpriseInfoService.selectEnterprisePage(page, enterpriseInfo));
+    }
+
+    /**
+     * 根据专家编号获取推荐企业
+     *
+     * @param expertCode 专家编号
+     * @return 结果
+     */
+    @GetMapping("/recommend/{expertCode}")
+    public R selectEnterpriseRecommend(@PathVariable("expertCode") String expertCode) {
+        return R.ok(enterpriseInfoService.selectEnterpriseRecommend(expertCode));
     }
 
     @GetMapping("/{id}")
