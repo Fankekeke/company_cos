@@ -1,15 +1,20 @@
 package cc.mrbird.febs.cos.controller;
 
 
+import cc.mrbird.febs.common.utils.FileDownloadUtils;
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.EnterpriseInfo;
 import cc.mrbird.febs.cos.service.IEnterpriseInfoService;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +41,35 @@ public class EnterpriseInfoController {
     }
 
     /**
+     * 下载模板
+     */
+    @PostMapping("/template")
+    public void downloadTemplate(HttpServletResponse response) {
+        try {
+            FileDownloadUtils.downloadTemplate(response, "企业基础数据.xlsx");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 导入企业信息列表
+     */
+    @PostMapping("/import")
+    public R importExcel(@RequestParam("file") MultipartFile file) {
+        try {
+            String errorMsg = enterpriseInfoService.importExcel(file);
+            if (StrUtil.isNotEmpty(errorMsg)) {
+                return R.error(errorMsg);
+            }
+            return R.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return R.error("导入异常");
+    }
+
+    /**
      * 根据专家编号获取推荐企业
      *
      * @param expertCode 专家编号
@@ -53,7 +87,7 @@ public class EnterpriseInfoController {
 
     @GetMapping("/list")
     public R list() {
-        return R.ok(enterpriseInfoService.list());
+        return R.ok(enterpriseInfoService.list(Wrappers.<EnterpriseInfo>lambdaQuery().isNotNull(EnterpriseInfo::getName)));
     }
 
     /**

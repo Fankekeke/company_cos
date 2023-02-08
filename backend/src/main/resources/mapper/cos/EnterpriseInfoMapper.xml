@@ -36,6 +36,7 @@
         enterprise_info ei
         where
         1 = 1
+        AND ei.name IS NOT NULL
         <if test="enterpriseInfo.name != null and enterpriseInfo.name != ''">
             AND ei.name LIKE CONCAT('%',#{enterpriseInfo.name},'%')
         </if>

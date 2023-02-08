@@ -1,15 +1,19 @@
 package cc.mrbird.febs.cos.controller;
 
 
+import cc.mrbird.febs.common.utils.FileDownloadUtils;
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.ExpertInfo;
 import cc.mrbird.febs.cos.service.IExpertInfoService;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +37,35 @@ public class ExpertInfoController {
     @GetMapping("/page")
     public R page(Page<ExpertInfo> page, ExpertInfo expertInfo) {
         return R.ok(expertInfoService.selectExpertPage(page, expertInfo));
+    }
+
+    /**
+     * 下载模板
+     */
+    @PostMapping("/template")
+    public void downloadTemplate(HttpServletResponse response) {
+        try {
+            FileDownloadUtils.downloadTemplate(response, "专家基础数据.xlsx");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 导入专家信息列表
+     */
+    @PostMapping("/import")
+    public R importExcel(@RequestParam("file") MultipartFile file) {
+        try {
+            String errorMsg = expertInfoService.importExcel(file);
+            if (StrUtil.isNotEmpty(errorMsg)) {
+                return R.error(errorMsg);
+            }
+            return R.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return R.error("导入异常");
     }
 
     /**
