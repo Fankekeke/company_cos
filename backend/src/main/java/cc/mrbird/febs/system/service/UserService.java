@@ -86,6 +86,15 @@ public interface UserService extends IService<User> {
 
     /**
      * 注册用户
+     * @param username 用户名
+     * @param password 密码
+     * @param code 绑定编号
+     * @param flag 标识（1.普通用户 2.企业 3.专家）
+     */
+    void registUser(String username, String password, String code, Integer flag) throws Exception;
+
+    /**
+     * 注册用户
      *
      * @param username 用户名
      * @param password 密码

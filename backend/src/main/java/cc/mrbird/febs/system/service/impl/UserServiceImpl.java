@@ -6,6 +6,9 @@ import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.service.CacheService;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.common.utils.MD5Util;
+import cc.mrbird.febs.cos.entity.EnterpriseInfo;
+import cc.mrbird.febs.cos.service.IEnterpriseInfoService;
+import cc.mrbird.febs.cos.service.IExpertInfoService;
 import cc.mrbird.febs.system.dao.UserMapper;
 import cc.mrbird.febs.system.dao.UserRoleMapper;
 import cc.mrbird.febs.system.domain.User;
@@ -15,6 +18,7 @@ import cc.mrbird.febs.system.service.UserConfigService;
 import cc.mrbird.febs.system.service.UserRoleService;
 import cc.mrbird.febs.system.service.UserService;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
@@ -46,6 +50,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private UserRoleService userRoleService;
     @Autowired
     private UserManager userManager;
+    @Autowired
+    private IExpertInfoService expertInfoService;
+    @Autowired
+    private IEnterpriseInfoService enterpriseInfoService;
 
 
     @Override
@@ -187,6 +195,58 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 将用户相关信息保存到 Redis中
         userManager.loadUserRedisCache(user);
 
+    }
+
+    /**
+     * 注册用户
+     * @param username 用户名
+     * @param password 密码
+     * @param code 绑定编号
+     * @param flag 标识（1.普通用户 2.企业 3.专家）
+     */
+    @Override
+    public void registUser(String username, String password, String code, Integer flag) throws Exception {
+        User user = new User();
+        user.setPassword(MD5Util.encrypt(username, password));
+        user.setUsername(username);
+        user.setCreateTime(new Date());
+        user.setStatus(User.STATUS_VALID);
+        user.setSsex(User.SEX_UNKNOW);
+        user.setAvatar(User.DEFAULT_AVATAR);
+        user.setDescription("注册用户");
+        this.save(user);
+
+
+        UserRole ur = new UserRole();
+        ur.setUserId(user.getUserId());
+        switch (flag) {
+            case 1:
+                ur.setRoleId(75L);
+                break;
+            case 2:
+                if (StrUtil.isNotEmpty(code) && enterpriseInfoService.getOne(Wrappers.<EnterpriseInfo>lambdaQuery().eq(EnterpriseInfo::getCode, code)) == null) {
+                    throw new FebsException("专家编号不存在");
+                }
+                String enterpriseCode = enterpriseInfoService.enterpriseRegister(code);
+                user.setUserCode(enterpriseCode);
+                ur.setRoleId(76L);
+                break;
+            case 3:
+                if (StrUtil.isNotEmpty(code) && !expertInfoService.checkExpert(code)) {
+                    throw new FebsException("专家编号不存在");
+                }
+                String expertCode = expertInfoService.expertRegister(code);
+                user.setUserCode(expertCode);
+                ur.setRoleId(77L);
+                break;
+            default:
+        }
+        this.userRoleMapper.insert(ur);
+
+        // 创建用户默认的个性化配置
+        userConfigService.initDefaultUserConfig(String.valueOf(user.getUserId()));
+        // 将用户相关信息保存到 Redis中
+        userManager.loadUserRedisCache(user);
     }
 
     @Override
