@@ -14,7 +14,7 @@
         ep.images,
         ep.create_date,
         ei.name as expertName,
-        ei.images
+        ei.images AS avatar
         from
         expert_product ep
         left join expert_info ei on
