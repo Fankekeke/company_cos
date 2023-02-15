@@ -164,26 +164,10 @@
         </div>
       </a-card>
     </a-row>
-    <post-add
-      v-if="postAdd.visiable"
-      @close="handlepostAddClose"
-      @success="handlepostAddSuccess"
-      :postAddVisiable="postAdd.visiable"
-      :tagList="tagListData">
-    </post-add>
-    <post-edit
-      ref="postEdit"
-      @close="handlepostEditClose"
-      @success="handlepostEditSuccess"
-      :postEditVisiable="postEdit.visiable"
-      :tagList="tagListData">
-    </post-edit>
   </div>
 </template>
 <script>
 import HeadInfo from '@/views/common/HeadInfo'
-import PostAdd from './admin/post/PostAdd'
-import PostEdit from './admin/post/PostEdit'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
@@ -198,7 +182,7 @@ function getBase64 (file) {
 
 export default {
   name: 'HomePage',
-  components: {HeadInfo, PostAdd, PostEdit},
+  components: {HeadInfo},
   data () {
     return {
       newsPage: 0,

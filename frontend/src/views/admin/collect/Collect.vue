@@ -116,7 +116,7 @@ export default {
       }, {
         title: '企业编号',
         dataIndex: 'enterpriseCode'
-      },  {
+      }, {
         title: '专家名称',
         dataIndex: 'expertName'
       }, {
