@@ -31,8 +31,8 @@
         expert_recommend er
         where
         1 = 1
-        <if test="recommend.expertName != null and recommend.expertName != ''">
-            AND er.name LIKE CONCAT('%',#{recommend.expertName},'%')
+        <if test="recommend.name != null and recommend.name != ''">
+            AND er.name LIKE CONCAT('%',#{recommend.name},'%')
         </if>
         <if test="recommend.position != null and recommend.position != ''">
             AND er.position LIKE CONCAT('%',#{recommend.position},'%')

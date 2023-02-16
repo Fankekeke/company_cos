@@ -80,6 +80,7 @@ public class EnterpriseInfoServiceImpl extends ServiceImpl<EnterpriseInfoMapper,
         StringBuilder error = new StringBuilder("");
         if (CollectionUtil.isEmpty(reports)) {
             error.append("导入数据不得为空。");
+            return error.toString();
         }
         for (EnterpriseInfo expert : reports) {
             if (StrUtil.isEmpty(expert.getName())) {
@@ -92,8 +93,11 @@ public class EnterpriseInfoServiceImpl extends ServiceImpl<EnterpriseInfoMapper,
             }
             expert.setCode("EP-" + System.currentTimeMillis());
         }
-        this.saveBatch(reports);
-        return null;
+        if (StrUtil.isEmpty(error.toString())) {
+            this.saveBatch(reports);
+            return null;
+        }
+        return error.toString();
     }
 
     /**

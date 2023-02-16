@@ -80,7 +80,7 @@ public class EnterpriseInfo implements Serializable {
     /**
      * 注册资本（万元）
      */
-    private Integer registeredCapital;
+    private String registeredCapital;
 
     /**
      * 注册资金币种
@@ -115,7 +115,7 @@ public class EnterpriseInfo implements Serializable {
     /**
      * 来源(1:自主注册、2:邀请注册、3:企业维护)
      */
-    private Integer source;
+    private String source;
 
     /**
      * 省

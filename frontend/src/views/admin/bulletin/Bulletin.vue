@@ -149,7 +149,7 @@ export default {
         }
       }, {
         title: '上传人',
-        dataIndex: 'uploader',
+        dataIndex: 'publisher',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text

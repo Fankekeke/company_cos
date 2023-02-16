@@ -7,21 +7,26 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="用户昵称"
+                label="专家姓名"
                 :labelCol="{span: 4}"
                 :wrapperCol="{span: 18, offset: 2}">
-                <a-input v-model="queryParams.username"/>
+                <a-input v-model="queryParams.name"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="消息状态"
+                label="岗位"
                 :labelCol="{span: 4}"
                 :wrapperCol="{span: 18, offset: 2}">
-                <a-select v-model="queryParams.readStatus" allowClear>
-                  <a-select-option value="0">未读</a-select-option>
-                  <a-select-option value="1">已读</a-select-option>
-                </a-select>
+                <a-input v-model="queryParams.position"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="联系电话"
+                :labelCol="{span: 4}"
+                :wrapperCol="{span: 18, offset: 2}">
+                <a-input v-model="queryParams.phone"/>
               </a-form-item>
             </a-col>
           </div>
@@ -34,7 +39,7 @@
     </div>
     <div>
       <div class="operator">
-        <!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
+        <a-button type="primary" ghost @click="add">导入</a-button>
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -66,11 +71,11 @@
         </template>
       </a-table>
     </div>
-    <user-view
-      @close="handleUserViewClose"
-      :userShow="userView.visiable"
-      :userData="userView.data">
-    </user-view>
+    <expert-add
+      :expertVisiable="expertAdd.visiable"
+      @close="expertClose"
+      @success="expertSuccess">
+    </expert-add>
   </a-card>
 </template>
 
@@ -78,13 +83,17 @@
 import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
+import ExpertAdd from './ExpertAdd.vue'
 moment.locale('zh-cn')
 
 export default {
   name: 'User',
-  components: {RangeDate},
+  components: {ExpertAdd, RangeDate},
   data () {
     return {
+      expertAdd: {
+        visiable: false
+      },
       userView: {
         visiable: false,
         data: null
@@ -114,11 +123,28 @@ export default {
     }),
     columns () {
       return [{
-        title: '消息ID',
-        dataIndex: 'id'
-      }, {
         title: '用户昵称',
-        dataIndex: 'username'
+        dataIndex: 'name'
+      }, {
+        title: '民族',
+        dataIndex: 'nationality',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '性别',
+        dataIndex: 'sex',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
         title: '头像',
         dataIndex: 'avatar',
@@ -132,25 +158,85 @@ export default {
           </a-popover>
         }
       }, {
-        title: '消息状态',
-        dataIndex: 'readStatus',
+        title: '政治面貌',
+        dataIndex: 'politicalStatus',
         customRender: (text, row, index) => {
-          switch (text) {
-            case 0:
-              return <a-tag>未读</a-tag>
-            case 1:
-              return <a-tag color="blue">已读</a-tag>
-            default:
-              return '- -'
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
           }
         }
       }, {
-        title: '消息内容',
-        dataIndex: 'content',
-        scopedSlots: {customRender: 'contentShow'}
+        title: '籍贯',
+        dataIndex: 'nativePlace',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
-        title: '发送时间',
-        dataIndex: 'createDate'
+        title: '工作单位',
+        dataIndex: 'employer',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '职务',
+        dataIndex: 'position',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '通讯地址',
+        dataIndex: 'address',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '手机号',
+        dataIndex: 'phone',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '专业方向一级',
+        dataIndex: 'levelOne',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '专业方向二级',
+        dataIndex: 'levelTwo',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }]
     }
   },
@@ -158,6 +244,16 @@ export default {
     this.fetch()
   },
   methods: {
+    expertClose () {
+      this.expertAdd.visiable = false
+    },
+    expertSuccess () {
+      this.expertAdd.visiable = false
+      this.fetch()
+    },
+    add () {
+      this.expertAdd.visiable = true
+    },
     view (row) {
       this.userView.data = row
       this.userView.visiable = true
@@ -186,7 +282,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/message-info/' + ids).then(() => {
+          that.$delete('/cos/expert-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -259,7 +355,7 @@ export default {
       if (params.readStatus === undefined) {
         delete params.readStatus
       }
-      this.$get('/cos/message-info/page', {
+      this.$get('/cos/expert-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

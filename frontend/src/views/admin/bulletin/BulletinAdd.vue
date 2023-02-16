@@ -21,7 +21,7 @@
         <a-col :span="12">
           <a-form-item label='上传人' v-bind="formItemLayout">
             <a-input v-decorator="[
-            'uploader',
+            'publisher',
             { rules: [{ required: true, message: '请输入上传人!' }] }
             ]"/>
           </a-form-item>
@@ -135,7 +135,6 @@ export default {
       this.form.validateFields((err, values) => {
         values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
-          values.publisher = this.currentUser.userId
           this.loading = true
           this.$post('/cos/bulletin-info', {
             ...values

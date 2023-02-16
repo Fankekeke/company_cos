@@ -7,21 +7,18 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="用户昵称"
+                label="企业名称"
                 :labelCol="{span: 4}"
                 :wrapperCol="{span: 18, offset: 2}">
-                <a-input v-model="queryParams.username"/>
+                <a-input v-model="queryParams.name"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="消息状态"
+                label="社会编码"
                 :labelCol="{span: 4}"
                 :wrapperCol="{span: 18, offset: 2}">
-                <a-select v-model="queryParams.readStatus" allowClear>
-                  <a-select-option value="0">未读</a-select-option>
-                  <a-select-option value="1">已读</a-select-option>
-                </a-select>
+                <a-input v-model="queryParams.creditCode"/>
               </a-form-item>
             </a-col>
           </div>
@@ -34,7 +31,7 @@
     </div>
     <div>
       <div class="operator">
-        <!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
+        <a-button type="primary" ghost @click="add">导入</a-button>
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -66,11 +63,11 @@
         </template>
       </a-table>
     </div>
-    <user-view
-      @close="handleUserViewClose"
-      :userShow="userView.visiable"
-      :userData="userView.data">
-    </user-view>
+    <enterprise-add
+      :enterpriseVisiable="enterpriseView.visiable"
+      @close="enterpriseClose"
+      @success="enterpriseSuccess">
+    </enterprise-add>
   </a-card>
 </template>
 
@@ -78,13 +75,17 @@
 import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
+import EnterpriseAdd from './EnterpriseAdd.vue'
 moment.locale('zh-cn')
 
 export default {
   name: 'User',
-  components: {RangeDate},
+  components: {EnterpriseAdd, RangeDate},
   data () {
     return {
+      enterpriseView: {
+        visiable: false
+      },
       userView: {
         visiable: false,
         data: null
@@ -114,43 +115,78 @@ export default {
     }),
     columns () {
       return [{
-        title: '消息ID',
-        dataIndex: 'id'
+        title: '企业名称',
+        dataIndex: 'name'
       }, {
-        title: '用户昵称',
-        dataIndex: 'username'
-      }, {
-        title: '头像',
-        dataIndex: 'avatar',
-        customRender: (text, record, index) => {
-          if (!record.avatar) return <a-avatar shape="square" icon="user" />
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'static/avatar/' + record.avatar } />
-            </template>
-            <a-avatar shape="square" icon="user" src={ 'static/avatar/' + record.avatar } />
-          </a-popover>
-        }
-      }, {
-        title: '消息状态',
-        dataIndex: 'readStatus',
+        title: '单位简称',
+        dataIndex: 'abbreviation',
         customRender: (text, row, index) => {
-          switch (text) {
-            case 0:
-              return <a-tag>未读</a-tag>
-            case 1:
-              return <a-tag color="blue">已读</a-tag>
-            default:
-              return '- -'
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
           }
         }
       }, {
-        title: '消息内容',
-        dataIndex: 'content',
-        scopedSlots: {customRender: 'contentShow'}
+        title: '统一社会信用代码',
+        dataIndex: 'creditCode',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
-        title: '发送时间',
-        dataIndex: 'createDate'
+        title: '单位性质',
+        dataIndex: 'nature',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '经营状态',
+        dataIndex: 'status',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '法定代表人',
+        dataIndex: 'corporateRepresentative',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '注册资本（万元）',
+        dataIndex: 'registeredCapital',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '成立日期',
+        dataIndex: 'establishmentDate',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }]
     }
   },
@@ -158,6 +194,16 @@ export default {
     this.fetch()
   },
   methods: {
+    enterpriseClose () {
+      this.enterpriseView.visiable = false
+    },
+    enterpriseSuccess () {
+      this.enterpriseView.visiable = false
+      this.fetch()
+    },
+    add () {
+      this.enterpriseView.visiable = true
+    },
     view (row) {
       this.userView.data = row
       this.userView.visiable = true
@@ -186,7 +232,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/message-info/' + ids).then(() => {
+          that.$delete('/cos/enterprise-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -259,7 +305,7 @@ export default {
       if (params.readStatus === undefined) {
         delete params.readStatus
       }
-      this.$get('/cos/message-info/page', {
+      this.$get('/cos/enterprise-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

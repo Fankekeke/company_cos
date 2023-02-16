@@ -21,7 +21,7 @@
         <a-col :span="12">
           <a-form-item label='上传人' v-bind="formItemLayout">
             <a-input v-decorator="[
-            'uploader',
+            'publisher',
             { rules: [{ required: true, message: '请输入上传人!' }] }
             ]"/>
           </a-form-item>
@@ -130,7 +130,7 @@ export default {
     },
     setFormValues ({...bulletin}) {
       this.rowId = bulletin.id
-      let fields = ['title', 'content', 'uploader']
+      let fields = ['title', 'content', 'publisher']
       let obj = {}
       Object.keys(bulletin).forEach((key) => {
         if (key === 'images') {

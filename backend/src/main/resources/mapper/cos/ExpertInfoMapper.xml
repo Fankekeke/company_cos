@@ -26,7 +26,8 @@
         ei.profile,
         ei.create_date,
         ei.code,
-        ei.open_flag
+        ei.open_flag,
+        ei.has_exist
         from
         expert_info ei
         where

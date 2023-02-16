@@ -85,6 +85,7 @@ public class ExpertInfoServiceImpl extends ServiceImpl<ExpertInfoMapper, ExpertI
         StringBuilder error = new StringBuilder("");
         if (CollectionUtil.isEmpty(reports)) {
             error.append("导入数据不得为空。");
+            return error.toString();
         }
         for (ExpertInfo expert : reports) {
             if (StrUtil.isEmpty(expert.getName())) {
@@ -95,8 +96,11 @@ public class ExpertInfoServiceImpl extends ServiceImpl<ExpertInfoMapper, ExpertI
             expert.setOpenFlag(1);
             expert.setHasExist(0);
         }
-        this.saveBatch(reports);
-        return null;
+        if (StrUtil.isEmpty(error.toString())) {
+            this.saveBatch(reports);
+            return null;
+        }
+        return error.toString();
     }
 
     /**

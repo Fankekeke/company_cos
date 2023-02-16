@@ -45,7 +45,7 @@ public class ExpertInfo implements Serializable {
     /**
      * 性别
      */
-    private Integer sex;
+    private String sex;
 
     /**
      * 政治面貌
