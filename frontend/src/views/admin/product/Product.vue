@@ -60,6 +60,8 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
+          <a-icon type="cloud" @click="handleDrugViewOpen(record)" title="详 情"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
@@ -114,6 +116,16 @@ export default {
         title: '专家编号',
         dataIndex: 'expertCode'
       }, {
+        title: '专家名称',
+        dataIndex: 'expertName',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
         title: '项目名称',
         dataIndex: 'productName',
         customRender: (text, row, index) => {
@@ -150,7 +162,7 @@ export default {
         dataIndex: 'content',
         scopedSlots: {customRender: 'contentShow'}
       }, {
-        title: '专家名称',
+        title: '内容研究',
         dataIndex: 'research',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -160,7 +172,17 @@ export default {
           }
         }
       }, {
-        title: '发送时间',
+        title: '关键技术',
+        dataIndex: 'technology',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '创建时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -169,6 +191,10 @@ export default {
             return '- -'
           }
         }
+      }, {
+        title: '操作',
+        dataIndex: 'operation',
+        scopedSlots: {customRender: 'operation'}
       }]
     }
   },

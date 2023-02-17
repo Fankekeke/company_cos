@@ -68,6 +68,8 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
+          <a-icon type="cloud" @click="handleDrugViewOpen(record)" title="详 情"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
@@ -76,6 +78,12 @@
       @close="expertClose"
       @success="expertSuccess">
     </expert-add>
+    <expert-edit
+      ref="expertEdit"
+      @close="handleExpertEditClose"
+      @success="handleExpertEditSuccess"
+      :expertEditVisiable="expertEdit.visiable">
+    </expert-edit>
   </a-card>
 </template>
 
@@ -92,6 +100,9 @@ export default {
   data () {
     return {
       expertAdd: {
+        visiable: false
+      },
+      expertEdit: {
         visiable: false
       },
       userView: {
@@ -123,7 +134,7 @@ export default {
     }),
     columns () {
       return [{
-        title: '用户昵称',
+        title: '专家名称',
         dataIndex: 'name'
       }, {
         title: '民族',
@@ -237,6 +248,10 @@ export default {
             return '- -'
           }
         }
+      }, {
+        title: '操作',
+        dataIndex: 'operation',
+        scopedSlots: {customRender: 'operation'}
       }]
     }
   },
@@ -244,6 +259,14 @@ export default {
     this.fetch()
   },
   methods: {
+    handleExpertEditClose () {
+      this.expertAdd.visiable = false
+    },
+    handleExpertEditSuccess () {
+      this.expertAdd.visiable = false
+      this.fetch()
+      this.$message.success('修改成功')
+    },
     expertClose () {
       this.expertAdd.visiable = false
     },
@@ -253,6 +276,10 @@ export default {
     },
     add () {
       this.expertAdd.visiable = true
+    },
+    edit (record) {
+      this.$refs.expertEdit.setFormValues(record)
+      this.expertEdit.visiable = true
     },
     view (row) {
       this.userView.data = row

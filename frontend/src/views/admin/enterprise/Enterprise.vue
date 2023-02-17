@@ -60,6 +60,8 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
+          <a-icon type="cloud" @click="handleDrugViewOpen(record)" title="详 情"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
@@ -68,6 +70,12 @@
       @close="enterpriseClose"
       @success="enterpriseSuccess">
     </enterprise-add>
+    <enterprise-edit
+      ref="enterpriseEdit"
+      @close="handleEnterpriseEditClose"
+      @success="handleEnterpriseEditSuccess"
+      :enterpriseEditVisiable="enterpriseEdit.visiable">
+    </enterprise-edit>
   </a-card>
 </template>
 
@@ -76,14 +84,18 @@ import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
 import EnterpriseAdd from './EnterpriseAdd.vue'
+import EnterpriseEdit from './EnterpriseEdit.vue'
 moment.locale('zh-cn')
 
 export default {
   name: 'User',
-  components: {EnterpriseAdd, RangeDate},
+  components: {EnterpriseAdd, EnterpriseEdit, RangeDate},
   data () {
     return {
       enterpriseView: {
+        visiable: false
+      },
+      enterpriseEdit: {
         visiable: false
       },
       userView: {
@@ -187,6 +199,10 @@ export default {
             return '- -'
           }
         }
+      }, {
+        title: '操作',
+        dataIndex: 'operation',
+        scopedSlots: {customRender: 'operation'}
       }]
     }
   },
@@ -194,15 +210,28 @@ export default {
     this.fetch()
   },
   methods: {
+    handleEnterpriseEditClose () {
+      this.enterpriseEdit.visiable = false
+    },
+    handleEnterpriseEditSuccess () {
+      this.enterpriseEdit.visiable = false
+      this.$message.success('修改成功')
+      this.fetch()
+    },
     enterpriseClose () {
       this.enterpriseView.visiable = false
     },
     enterpriseSuccess () {
       this.enterpriseView.visiable = false
       this.fetch()
+      this.$message.success('导入成功')
     },
     add () {
       this.enterpriseView.visiable = true
+    },
+    edit (record) {
+      this.$refs.enterpriseEdit.setFormValues(record)
+      this.enterpriseEdit.visiable = true
     },
     view (row) {
       this.userView.data = row

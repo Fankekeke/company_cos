@@ -7,21 +7,18 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="用户昵称"
+                label="专家名称"
                 :labelCol="{span: 4}"
                 :wrapperCol="{span: 18, offset: 2}">
-                <a-input v-model="queryParams.username"/>
+                <a-input v-model="queryParams.name"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="消息状态"
+                label="岗位"
                 :labelCol="{span: 4}"
                 :wrapperCol="{span: 18, offset: 2}">
-                <a-select v-model="queryParams.readStatus" allowClear>
-                  <a-select-option value="0">未读</a-select-option>
-                  <a-select-option value="1">已读</a-select-option>
-                </a-select>
+                <a-input v-model="queryParams.position"/>
               </a-form-item>
             </a-col>
           </div>
@@ -63,6 +60,8 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
+          <a-icon type="cloud" @click="handleDrugViewOpen(record)" title="详 情"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
@@ -114,11 +113,46 @@ export default {
     }),
     columns () {
       return [{
-        title: '消息ID',
-        dataIndex: 'id'
+        title: '推荐人',
+        dataIndex: 'recommendName'
       }, {
-        title: '用户昵称',
-        dataIndex: 'username'
+        title: '专家名称',
+        dataIndex: 'name'
+      }, {
+        title: '审核状态',
+        dataIndex: 'status',
+        customRender: (text, row, index) => {
+          switch (text) {
+            case 1:
+              return <a-tag>正在审核</a-tag>
+            case 2:
+              return <a-tag color='green'>审核通过</a-tag>
+              case 3:
+              return <a-tag color='red'>驳回</a-tag>
+            default:
+              return '- -'
+          }
+        }
+      }, {
+        title: '民族',
+        dataIndex: 'nationality',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '性别',
+        dataIndex: 'sex',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
         title: '头像',
         dataIndex: 'avatar',
@@ -132,25 +166,69 @@ export default {
           </a-popover>
         }
       }, {
-        title: '消息状态',
-        dataIndex: 'readStatus',
+        title: '政治面貌',
+        dataIndex: 'politicalStatus',
         customRender: (text, row, index) => {
-          switch (text) {
-            case 0:
-              return <a-tag>未读</a-tag>
-            case 1:
-              return <a-tag color="blue">已读</a-tag>
-            default:
-              return '- -'
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
           }
         }
       }, {
-        title: '消息内容',
-        dataIndex: 'content',
-        scopedSlots: {customRender: 'contentShow'}
+        title: '籍贯',
+        dataIndex: 'nativePlace',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
-        title: '发送时间',
-        dataIndex: 'createDate'
+        title: '工作单位',
+        dataIndex: 'employer',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '职务',
+        dataIndex: 'position',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '专业方向一级',
+        dataIndex: 'levelOne',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '专业方向二级',
+        dataIndex: 'levelTwo',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '操作',
+        dataIndex: 'operation',
+        scopedSlots: {customRender: 'operation'}
       }]
     }
   },
