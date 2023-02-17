@@ -60,13 +60,13 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="cloud" @click="handleDrugViewOpen(record)" title="详 情"></a-icon>
+          <a-icon type="cloud" @click="handleEnterpriseViewOpen(record)" title="详 情"></a-icon>
           <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
     <enterprise-add
-      :enterpriseVisiable="enterpriseView.visiable"
+      :enterpriseVisiable="enterpriseAdd.visiable"
       @close="enterpriseClose"
       @success="enterpriseSuccess">
     </enterprise-add>
@@ -76,6 +76,11 @@
       @success="handleEnterpriseEditSuccess"
       :enterpriseEditVisiable="enterpriseEdit.visiable">
     </enterprise-edit>
+    <enterprise-view
+      @close="handleEnterpriseViewClose"
+      :enterpriseShow="enterpriseView.visiable"
+      :enterpriseData="enterpriseView.data">
+    </enterprise-view>
   </a-card>
 </template>
 
@@ -85,15 +90,20 @@ import {mapState} from 'vuex'
 import moment from 'moment'
 import EnterpriseAdd from './EnterpriseAdd.vue'
 import EnterpriseEdit from './EnterpriseEdit.vue'
+import EnterpriseView from './EnterpriseView.vue'
 moment.locale('zh-cn')
 
 export default {
   name: 'User',
-  components: {EnterpriseAdd, EnterpriseEdit, RangeDate},
+  components: {EnterpriseAdd, EnterpriseEdit, EnterpriseView, RangeDate},
   data () {
     return {
-      enterpriseView: {
+      enterpriseAdd: {
         visiable: false
+      },
+      enterpriseView: {
+        visiable: false,
+        data: null
       },
       enterpriseEdit: {
         visiable: false
@@ -210,6 +220,13 @@ export default {
     this.fetch()
   },
   methods: {
+    handleEnterpriseViewOpen (record) {
+      this.enterpriseView.data = record
+      this.enterpriseView.visiable = true
+    },
+    handleEnterpriseViewClose () {
+      this.enterpriseView.visiable = false
+    },
     handleEnterpriseEditClose () {
       this.enterpriseEdit.visiable = false
     },
@@ -219,10 +236,10 @@ export default {
       this.fetch()
     },
     enterpriseClose () {
-      this.enterpriseView.visiable = false
+      this.enterpriseAdd.visiable = false
     },
     enterpriseSuccess () {
-      this.enterpriseView.visiable = false
+      this.enterpriseAdd.visiable = false
       this.fetch()
       this.$message.success('导入成功')
     },

@@ -60,16 +60,16 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="cloud" @click="handleDrugViewOpen(record)" title="详 情"></a-icon>
+          <a-icon type="cloud" @click="view(record)" title="详 情"></a-icon>
           <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
-    <user-view
-      @close="handleUserViewClose"
-      :userShow="userView.visiable"
-      :userData="userView.data">
-    </user-view>
+    <product-view
+      @close="handleProductViewClose"
+      :productShow="productView.visiable"
+      :productData="productView.data">
+    </product-view>
   </a-card>
 </template>
 
@@ -77,14 +77,15 @@
 import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
+import ProductView from './ProductView.vue'
 moment.locale('zh-cn')
 
 export default {
   name: 'User',
-  components: {RangeDate},
+  components: {RangeDate, ProductView},
   data () {
     return {
-      userView: {
+      productView: {
         visiable: false,
         data: null
       },
@@ -203,8 +204,11 @@ export default {
   },
   methods: {
     view (row) {
-      this.userView.data = row
-      this.userView.visiable = true
+      this.productView.data = row
+      this.productView.visiable = true
+    },
+    handleProductViewClose () {
+      this.productView.visiable = false
     },
     handleUserViewClose () {
       this.userView.visiable = false

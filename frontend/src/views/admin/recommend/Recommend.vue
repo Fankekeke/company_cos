@@ -65,11 +65,11 @@
         </template>
       </a-table>
     </div>
-    <user-view
+    <recommend-view
       @close="handleUserViewClose"
-      :userShow="userView.visiable"
-      :userData="userView.data">
-    </user-view>
+      :recommendShow="userView.visiable"
+      :recommendData="userView.data">
+    </recommend-view>
   </a-card>
 </template>
 
@@ -77,11 +77,12 @@
 import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
+import RecommendView from './RecommendView.vue'
 moment.locale('zh-cn')
 
 export default {
   name: 'User',
-  components: {RangeDate},
+  components: {RangeDate, RecommendView},
   data () {
     return {
       userView: {

@@ -68,7 +68,7 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="cloud" @click="handleDrugViewOpen(record)" title="详 情"></a-icon>
+          <a-icon type="cloud" @click="handleExpertViewOpen(record)" title="详 情"></a-icon>
           <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
@@ -84,6 +84,11 @@
       @success="handleExpertEditSuccess"
       :expertEditVisiable="expertEdit.visiable">
     </expert-edit>
+    <expert-view
+      @close="handleExpertViewClose"
+      :expertShow="expertView.visiable"
+      :expertData="expertView.data">
+    </expert-view>
   </a-card>
 </template>
 
@@ -92,13 +97,18 @@ import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
 import ExpertAdd from './ExpertAdd.vue'
+import ExpertView from './ExpertView.vue'
 moment.locale('zh-cn')
 
 export default {
   name: 'User',
-  components: {ExpertAdd, RangeDate},
+  components: {ExpertAdd, ExpertView, RangeDate},
   data () {
     return {
+      expertView: {
+        visiable: false,
+        data: null
+      },
       expertAdd: {
         visiable: false
       },
@@ -259,6 +269,13 @@ export default {
     this.fetch()
   },
   methods: {
+    handleExpertViewOpen (record) {
+      this.expertView.data = record
+      this.expertView.visiable = true
+    },
+    handleExpertViewClose () {
+      this.expertView.visiable = false
+    },
     handleExpertEditClose () {
       this.expertAdd.visiable = false
     },
