@@ -61,7 +61,7 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col :span="8"><b>职称：</b>
-          {{ recommendData.jobTitle }} 
+          {{ recommendData.jobTitle }}
         </a-col>
         <a-col :span="8"><b>特殊称谓：</b>
           {{ recommendData.specialAppellation }}
@@ -73,7 +73,7 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col :span="8"><b>固定电话：</b>
-          {{ recommendData.fixedTelephone }} 
+          {{ recommendData.fixedTelephone }}
         </a-col>
         <a-col :span="8"><b>创建时间：</b>
           {{ recommendData.createDate }}
@@ -82,7 +82,7 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col :span="24"><b>个人简介：</b>
-          {{ recommendData.profile }} 
+          {{ recommendData.profile }}
         </a-col>
       </a-row>
       <br/>

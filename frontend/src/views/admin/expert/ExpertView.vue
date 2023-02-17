@@ -40,16 +40,15 @@
         </a-col>
         <br/>
         <br/>
-        <a-col :span="24"><b>手机号：</b>
+        <a-col :span="8"><b>手机号：</b>
           {{ expertData.phone }}
+        </a-col>
+        <a-col :span="8"><b>专业方向一级：</b>
+          {{ expertData.levelOne }}
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="24"><b>专业方向一级：</b>
-          {{ expertData.levelOne }}
-        </a-col>
-        <br/>
         <br/>
         <a-col :span="8"><b>出生日期：</b>
           {{ expertData.birthDate }}
@@ -61,7 +60,7 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col :span="8"><b>职称：</b>
-          {{ expertData.jobTitle }} 
+          {{ expertData.jobTitle }}
         </a-col>
         <a-col :span="8"><b>特殊称谓：</b>
           {{ expertData.specialAppellation }}
@@ -73,7 +72,7 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col :span="8"><b>固定电话：</b>
-          {{ expertData.fixedTelephone }} 
+          {{ expertData.fixedTelephone }}
         </a-col>
         <a-col :span="8"><b>创建时间：</b>
           {{ expertData.createDate }}
@@ -82,7 +81,7 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col :span="24"><b>个人简介：</b>
-          {{ expertData.profile }} 
+          {{ expertData.profile }}
         </a-col>
       </a-row>
       <br/>

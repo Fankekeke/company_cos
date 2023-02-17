@@ -42,7 +42,7 @@ public class ExpertInfoController {
     /**
      * 下载模板
      */
-    @PostMapping("/template")
+    @GetMapping("/template")
     public void downloadTemplate(HttpServletResponse response) {
         try {
             FileDownloadUtils.downloadTemplate(response, "专家基础数据.xlsx");

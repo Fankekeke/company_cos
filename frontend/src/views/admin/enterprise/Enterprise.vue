@@ -240,11 +240,11 @@ export default {
     },
     enterpriseSuccess () {
       this.enterpriseAdd.visiable = false
-      this.fetch()
       this.$message.success('导入成功')
+      this.fetch()
     },
     add () {
-      this.enterpriseView.visiable = true
+      this.enterpriseAdd.visiable = true
     },
     edit (record) {
       this.$refs.enterpriseEdit.setFormValues(record)

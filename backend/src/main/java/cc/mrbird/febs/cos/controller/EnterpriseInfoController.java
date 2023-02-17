@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
@@ -43,7 +44,7 @@ public class EnterpriseInfoController {
     /**
      * 下载模板
      */
-    @PostMapping("/template")
+    @GetMapping("/template")
     public void downloadTemplate(HttpServletResponse response) {
         try {
             FileDownloadUtils.downloadTemplate(response, "企业基础数据.xlsx");

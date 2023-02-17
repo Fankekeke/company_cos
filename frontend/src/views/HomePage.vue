@@ -1,6 +1,6 @@
 <template>
   <div :class="[multipage === true ? 'multi-page':'single-page', 'not-menu-page', 'home-page']" style="background-color: #f0f2f5; border: none">
-    <a-row v-if="newsList.length > 0" style="width: 65%;margin: 0 auto;margin-bottom: 15px">
+    <a-row v-if="newsList.length > 0" style="width: 80%;margin: 0 auto;margin-bottom: 15px">
       <a-col :span="22">
         <a-alert
           banner
@@ -13,7 +13,7 @@
       </a-col>
     </a-row>
     <a-row :gutter="8" class="head-info">
-      <a-card class="head-info-card" style="width: 65%;margin: 0 auto">
+      <a-card class="head-info-card" style="width: 80%;margin: 0 auto">
         <a-col :span="12">
           <div class="head-info-avatar">
             <img alt="头像" :src="avatar">
@@ -44,7 +44,7 @@
       </a-card>
     </a-row>
     <a-row :gutter="8" class="count-info">
-      <a-card class="head-info-card" style="width: 65%;margin: 0 auto"></a-card>
+      <a-card class="head-info-card" style="width: 80%;margin: 0 auto"></a-card>
     </a-row>
   </div>
 </template>

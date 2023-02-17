@@ -1,7 +1,6 @@
 <template>
   <a-modal v-model="show" title="导入专家信息" @cancel="onClose" :width="500" :footer="null">
     <a-upload-dragger
-      v-if="expertVisiable"
       name="file"
       :multiple="true"
       accept=".xls, .xlsx"
@@ -19,7 +18,7 @@
       </p>
     </a-upload-dragger>
     <a-button-group style="margin-top: 20px">
-      <a-button type="primary" icon="cloud-download" />
+      <a-button type="primary" icon="cloud-download" @click="download"/>
     </a-button-group>
   </a-modal>
 </template>
@@ -57,11 +56,18 @@ export default {
   },
   methods: {
     handleChange ({file}) {
-      console.log(file)
-      console.log(file.response.code)
-      if (file.response.code === 500 && file.status === 'done') {
-        this.$message.error(file.response.msg)
+      if (file.response !== undefined) {
+        console.log(file.response.code)
+        console.log(file.status)
+        if (file.response.code === 500 && file.status === 'done') {
+          this.$message.error(file.response.msg)
+        } else if (file.response.code === 0 && file.status === 'done') {
+          this.$emit('success')
+        }
       }
+    },
+    download () {
+      window.location.href = 'http://127.0.0.1:9527/cos/expert-info/template'
     },
     onClose () {
       this.$emit('close')

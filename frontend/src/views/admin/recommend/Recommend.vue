@@ -128,7 +128,7 @@ export default {
               return <a-tag>正在审核</a-tag>
             case 2:
               return <a-tag color='green'>审核通过</a-tag>
-              case 3:
+            case 3:
               return <a-tag color='red'>驳回</a-tag>
             default:
               return '- -'

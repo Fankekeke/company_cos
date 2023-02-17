@@ -220,6 +220,22 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <excludes>
+                    <exclude>**/*.xls</exclude>
+                    <exclude>**/*.xlsx</exclude>
+                </excludes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.xls</include>
+                    <include>**/*.xlsx</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
                     <exclude>ip2region/ip2region.db</exclude>
                 </excludes>
                 <filtering>true</filtering>

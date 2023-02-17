@@ -97,12 +97,13 @@ import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
 import ExpertAdd from './ExpertAdd.vue'
+import ExpertEdit from './ExpertEdit.vue'
 import ExpertView from './ExpertView.vue'
 moment.locale('zh-cn')
 
 export default {
   name: 'User',
-  components: {ExpertAdd, ExpertView, RangeDate},
+  components: {ExpertAdd, ExpertView, ExpertEdit, RangeDate},
   data () {
     return {
       expertView: {
@@ -277,10 +278,10 @@ export default {
       this.expertView.visiable = false
     },
     handleExpertEditClose () {
-      this.expertAdd.visiable = false
+      this.expertEdit.visiable = false
     },
     handleExpertEditSuccess () {
-      this.expertAdd.visiable = false
+      this.expertEdit.visiable = false
       this.fetch()
       this.$message.success('修改成功')
     },
@@ -289,6 +290,7 @@ export default {
     },
     expertSuccess () {
       this.expertAdd.visiable = false
+      this.$message.success('导入成功')
       this.fetch()
     },
     add () {

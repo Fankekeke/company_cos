@@ -31,7 +31,7 @@
     </div>
     <div>
       <div class="operator">
-        <!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
+        <a-button type="primary" ghost @click="add">新增</a-button>
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -65,6 +65,17 @@
         </template>
       </a-table>
     </div>
+    <product-add
+      :productAddVisiable="productAdd.visiable"
+      @close="productClose"
+      @success="productSuccess">
+    </product-add>
+    <product-edit
+      ref="productEdit"
+      @close="handleProductEditClose"
+      @success="handleProductEditSuccess"
+      :productEditVisiable="productEdit.visiable">
+    </product-edit>
     <product-view
       @close="handleProductViewClose"
       :productShow="productView.visiable"
@@ -78,16 +89,23 @@ import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
 import ProductView from './ProductView.vue'
+import ProductAdd from './ProductAdd.vue'
 moment.locale('zh-cn')
 
 export default {
   name: 'User',
-  components: {RangeDate, ProductView},
+  components: {RangeDate, ProductView, ProductAdd},
   data () {
     return {
+      productEdit: {
+        visiable: false
+      },
       productView: {
         visiable: false,
         data: null
+      },
+      productAdd: {
+        visiable: false
       },
       advanced: false,
       queryParams: {},
@@ -203,6 +221,25 @@ export default {
     this.fetch()
   },
   methods: {
+    handleProductEditClose () {
+      this.productEdit.visiable = false
+    },
+    handleProductEditSuccess () {
+      this.productEdit.visiable = false
+      this.$message.success('添加成功')
+      this.fetch()
+    },
+    productClose () {
+      this.productAdd.visiable = false
+    },
+    productSuccess () {
+      this.productAdd.visiable = false
+      this.$message.success('添加成功')
+      this.fetch()
+    },
+    add () {
+      this.productAdd.visiable = true
+    },
     view (row) {
       this.productView.data = row
       this.productView.visiable = true
