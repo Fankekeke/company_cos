@@ -26,8 +26,8 @@ public interface INotifyInfoService extends IService<NotifyInfo> {
     /**
      * 根据用户ID获取通知消息
      *
-     * @param userId 用户ID
+     * @param userCode 用户ID
      * @return 结果
      */
-    List<NotifyInfo> selectNotifyByUserId(Integer userId);
+    List<NotifyInfo> selectNotifyByUserId(String userCode);
 }

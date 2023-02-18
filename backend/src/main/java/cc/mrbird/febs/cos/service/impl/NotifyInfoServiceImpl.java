@@ -5,6 +5,7 @@ import cc.mrbird.febs.cos.dao.NotifyInfoMapper;
 import cc.mrbird.febs.cos.service.INotifyInfoService;
 import cc.mrbird.febs.system.domain.User;
 import cc.mrbird.febs.system.service.UserService;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -41,16 +42,15 @@ public class NotifyInfoServiceImpl extends ServiceImpl<NotifyInfoMapper, NotifyI
     /**
      * 根据用户ID获取通知消息
      *
-     * @param userId 用户ID
+     * @param userCode 用户ID
      * @return 结果
      */
     @Override
-    public List<NotifyInfo> selectNotifyByUserId(Integer userId) {
+    public List<NotifyInfo> selectNotifyByUserId(String userCode) {
         // 查询用户编号
-        User user = userService.getById(userId);
-        if (user == null) {
+        if (StrUtil.isEmpty(userCode)) {
             return Collections.emptyList();
         }
-        return this.list(Wrappers.<NotifyInfo>lambdaQuery().eq(NotifyInfo::getUserCode, user.getUserId()).eq(NotifyInfo::getDelFlag, 0));
+        return this.list(Wrappers.<NotifyInfo>lambdaQuery().eq(NotifyInfo::getUserCode, userCode).eq(NotifyInfo::getDelFlag, 0));
     }
 }

@@ -10,19 +10,21 @@
         </a-carousel>
       </a-col>
       <a-col :span="6">
-        <a-card hoverable :loading="loading" :bordered="false" title="公告信息" style="height: 550px;overflow: auto">
+        <a-card hoverable :loading="loading" :bordered="false" title="消息通知" style="height: 550px;overflow: auto">
           <div style="padding: 0 22px">
             <a-list item-layout="vertical" :pagination="false" :data-source="bulletinList">
               <a-list-item slot="renderItem" key="item.title" slot-scope="item, index">
                 <template slot="actions">
-              <span key="message">
-                <a-icon type="message" style="margin-right: 8px" />
-                {{ item.date }}
-              </span>
+                  <span key="message" style="font-size: 13px">
+                    <a-icon type="message" style="margin-right: 8px" />
+                    {{ item.createDate }}
+                  </span>
                 </template>
-                <a-list-item-meta :description="item.content" style="font-size: 14px">
-                  <a slot="title">{{ item.title }}</a>
+                <a-list-item-meta :description="item.content" style="font-size: 13px">
                 </a-list-item-meta>
+                <a slot="actions">
+                  <span @click="cleanMessage(item.id)">已阅</span>
+                </a>
               </a-list-item>
             </a-list>
           </div>
@@ -118,6 +120,8 @@ export default {
     }
   },
   methods: {
+    cleanMessage () {
+    },
     async handlePreview (file) {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj)
@@ -135,12 +139,14 @@ export default {
       return `${time}，${this.user.username}`
     },
     getNewList () {
-      this.$get(`/cos/bulletin-info/list`).then((r) => {
+      this.$get(`/cos/notify-info/list/${this.user.userCode}`).then((r) => {
         this.bulletinList = r.data.data
+        console.log(JSON.stringify(this.bulletinList))
       })
     }
   },
   mounted () {
+    console.log(JSON.stringify(this.user))
     this.getNewList()
     this.welcomeMessage = this.welcome()
     this.$get(`index/${this.user.username}`).then((r) => {

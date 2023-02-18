@@ -38,12 +38,12 @@ public class NotifyInfoController {
     /**
      * 根据用户ID获取通知消息
      *
-     * @param userId 用户ID
+     * @param userCode 用户ID
      * @return 结果
      */
-    @GetMapping("/list/{userId}")
-    public R selectNotifyByUserId(@PathVariable("userId") Integer userId) {
-        return R.ok(notifyInfoService.selectNotifyByUserId(userId));
+    @GetMapping("/list/{userCode}")
+    public R selectNotifyByUserId(@PathVariable("userCode") String userCode) {
+        return R.ok(notifyInfoService.selectNotifyByUserId(userCode));
     }
 
     @GetMapping("/{id}")
