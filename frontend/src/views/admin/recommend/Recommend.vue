@@ -60,13 +60,13 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="cloud" @click="handleDrugViewOpen(record)" title="详 情"></a-icon>
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
+          <a-icon type="cloud" @click="view(record)" title="详 情"></a-icon>
         </template>
       </a-table>
     </div>
     <recommend-view
       @close="handleUserViewClose"
+      @success="handleUserViewSuccess"
       :recommendShow="userView.visiable"
       :recommendData="userView.data">
     </recommend-view>
@@ -243,6 +243,11 @@ export default {
     },
     handleUserViewClose () {
       this.userView.visiable = false
+    },
+    handleUserViewSuccess () {
+      this.userView.visiable = false
+      this.fetch()
+      this.$message.success('审核成功')
     },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys

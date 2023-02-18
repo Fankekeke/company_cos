@@ -7,6 +7,7 @@ import cc.mrbird.febs.cos.entity.ExpertInfo;
 import cc.mrbird.febs.cos.service.IExpertInfoService;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,17 @@ public class ExpertInfoController {
     @GetMapping("/page")
     public R page(Page<ExpertInfo> page, ExpertInfo expertInfo) {
         return R.ok(expertInfoService.selectExpertPage(page, expertInfo));
+    }
+
+    @GetMapping("/list/{key}")
+    public R listByKey(@PathVariable("key") String key) {
+        return R.ok(expertInfoService.list(Wrappers.<ExpertInfo>lambdaQuery()
+                .like(StrUtil.isNotEmpty(key), ExpertInfo::getName, key).or()
+                .like(StrUtil.isNotEmpty(key), ExpertInfo::getPoliticalStatus, key).or()
+                .like(StrUtil.isNotEmpty(key), ExpertInfo::getEmployer, key).or()
+                .like(StrUtil.isNotEmpty(key), ExpertInfo::getPosition, key).or()
+                .like(StrUtil.isNotEmpty(key), ExpertInfo::getLevelOne, key).or()
+                .like(StrUtil.isNotEmpty(key), ExpertInfo::getLevelTwo, key).eq(ExpertInfo::getOpenFlag, 1)));
     }
 
     /**

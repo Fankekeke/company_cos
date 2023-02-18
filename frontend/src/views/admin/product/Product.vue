@@ -44,9 +44,14 @@
                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                :scroll="{ x: 900 }"
                @change="handleTableChange">
-        <template slot="avatarShow" slot-scope="text, record">
+        <template slot="productNameShow" slot-scope="text, record">
           <template>
-            <img alt="头像" :src="'static/avatar/' + text">
+            <a-tooltip>
+              <template slot="title">
+                {{ record.productName }}
+              </template>
+              {{ record.productName.slice(0, 6) }} ...
+            </a-tooltip>
           </template>
         </template>
         <template slot="contentShow" slot-scope="text, record">
@@ -55,7 +60,27 @@
               <template slot="title">
                 {{ record.content }}
               </template>
-              {{ record.content.slice(0, 30) }} ...
+              {{ record.content.slice(0, 10) }} ...
+            </a-tooltip>
+          </template>
+        </template>
+        <template slot="researchShow" slot-scope="text, record">
+          <template>
+            <a-tooltip>
+              <template slot="title">
+                {{ record.research }}
+              </template>
+              {{ record.research.slice(0, 10) }} ...
+            </a-tooltip>
+          </template>
+        </template>
+        <template slot="technologyShow" slot-scope="text, record">
+          <template>
+            <a-tooltip>
+              <template slot="title">
+                {{ record.technology }}
+              </template>
+              {{ record.technology.slice(0, 10) }} ...
             </a-tooltip>
           </template>
         </template>
@@ -90,11 +115,12 @@ import {mapState} from 'vuex'
 import moment from 'moment'
 import ProductView from './ProductView.vue'
 import ProductAdd from './ProductAdd.vue'
+import ProductEdit from './ProductEdit.vue'
 moment.locale('zh-cn')
 
 export default {
   name: 'User',
-  components: {RangeDate, ProductView, ProductAdd},
+  components: {RangeDate, ProductView, ProductAdd, ProductEdit},
   data () {
     return {
       productEdit: {
@@ -147,13 +173,7 @@ export default {
       }, {
         title: '项目名称',
         dataIndex: 'productName',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
+        scopedSlots: {customRender: 'productNameShow'}
       }, {
         title: '头像',
         dataIndex: 'avatar',
@@ -183,23 +203,11 @@ export default {
       }, {
         title: '内容研究',
         dataIndex: 'research',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
+        scopedSlots: {customRender: 'researchShow'}
       }, {
         title: '关键技术',
         dataIndex: 'technology',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
+        scopedSlots: {customRender: 'technologyShow'}
       }, {
         title: '创建时间',
         dataIndex: 'createDate',
@@ -221,6 +229,10 @@ export default {
     this.fetch()
   },
   methods: {
+    edit (record) {
+      this.$refs.productEdit.setFormValues(record)
+      this.productEdit.visiable = true
+    },
     handleProductEditClose () {
       this.productEdit.visiable = false
     },

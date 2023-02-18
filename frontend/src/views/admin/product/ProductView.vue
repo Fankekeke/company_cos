@@ -11,22 +11,30 @@
         <a-col :span="8"><b>所属专家：</b>
           {{ productData.expertName }}
         </a-col>
-        <a-col :span="8"><b>项目名称：</b>
+        <a-col :span="16"><b>项目名称：</b>
           {{ productData.productName }}
-        </a-col>
-        <a-col :span="8"><b>内容研究：</b>
-          {{ productData.research }}
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>关键技术：</b>
-          {{ productData.technology }}
-        </a-col>
-        <a-col :span="16"><b>项目内容：</b>
-          {{ productData.content }}
+        <a-col :span="24"><b>内容研究：</b>
+          {{ productData.research }}
         </a-col>
         <br/>
+      </a-row>
+      <br/>
+      <a-row style="padding-left: 24px;padding-right: 24px;">
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">关键技术</span></a-col>
+        <a-col :span="24">
+          {{ productData.technology }}
+        </a-col>
+      </a-row>
+      <br/>
+      <a-row style="padding-left: 24px;padding-right: 24px;">
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">项目内容</span></a-col>
+        <a-col :span="24">
+          {{ productData.content }}
+        </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
@@ -36,7 +44,7 @@
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">药品图片</span></a-col>
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">项目图片</span></a-col>
         <a-col :span="24">
           <a-upload
             name="avatar"

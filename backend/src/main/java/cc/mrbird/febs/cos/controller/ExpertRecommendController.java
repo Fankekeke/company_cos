@@ -77,6 +77,7 @@ public class ExpertRecommendController {
      */
     @PostMapping
     public R save(ExpertRecommendVo expertRecommend) {
+        expertRecommend.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(expertRecommendService.recommendBatch(expertRecommend));
     }
 

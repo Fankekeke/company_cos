@@ -92,6 +92,7 @@ public class EnterpriseInfoServiceImpl extends ServiceImpl<EnterpriseInfoMapper,
                 return error.toString();
             }
             expert.setCode("EP-" + System.currentTimeMillis());
+            expert.setCreateDate(DateUtil.formatDateTime(new Date()));
         }
         if (StrUtil.isEmpty(error.toString())) {
             this.saveBatch(reports);

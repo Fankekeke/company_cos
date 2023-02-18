@@ -95,6 +95,7 @@ public class ExpertInfoServiceImpl extends ServiceImpl<ExpertInfoMapper, ExpertI
             expert.setCode("EX-" + System.currentTimeMillis());
             expert.setOpenFlag(1);
             expert.setHasExist(0);
+            expert.setCreateDate(DateUtil.formatDate(new Date()));
         }
         if (StrUtil.isEmpty(error.toString())) {
             this.saveBatch(reports);

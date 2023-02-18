@@ -21,6 +21,7 @@
         (ei2.code = ci.enterprise_code)
         where
         1 = 1
+        GROUP BY ci.id
         <if test="collectInfo.expertName != null and collectInfo.expertName != ''">
             AND ei.name LIKE CONCAT('%',#{collectInfo.expertName},'%')
         </if>

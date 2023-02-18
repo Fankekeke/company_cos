@@ -7,19 +7,15 @@
         <span class="curr-user">{{user.username}}</span>
       </span>
       <a-menu style="width: 150px" slot="overlay">
-        <a-menu-item @click="openProfile">
-          <a-icon type="user"/>
-          <span>个人中心</span>
-        </a-menu-item>
         <a-menu-item @click="updatePassword">
           <a-icon type="key"/>
           <span>密码修改</span>
         </a-menu-item>
         <a-menu-divider></a-menu-divider>
-        <a-menu-item @click="handleSettingClick">
-          <a-icon type="setting"/>
-          <span>系统定制</span>
-        </a-menu-item>
+<!--        <a-menu-item @click="handleSettingClick">-->
+<!--          <a-icon type="setting"/>-->
+<!--          <span>系统定制</span>-->
+<!--        </a-menu-item>-->
         <a-menu-divider></a-menu-divider>
         <a-menu-item @click="logout">
           <a-icon type="logout"/>

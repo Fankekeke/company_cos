@@ -1,15 +1,32 @@
 <template>
   <div :class="[multipage === true ? 'multi-page':'single-page', 'not-menu-page', 'home-page']" style="background-color: #f0f2f5; border: none">
-    <a-row v-if="newsList.length > 0" style="width: 80%;margin: 0 auto;margin-bottom: 15px">
-      <a-col :span="22">
-        <a-alert
-          banner
-          :message="newsContent"
-          type="info"
-        />
+    <a-row :gutter="20" style="width: 81%;margin: 0 auto;margin-bottom: 15px">
+      <a-col :span="18">
+        <a-carousel effect="fade">
+          <div style="width: 100%;height: 550px"><img :src="'http://127.0.0.1:9527/imagesWeb/1.jpg'" style="width: 100%;height: 100%;object-fit:cover;" /></div>
+          <div style="width: 100%;height: 550px"><img :src="'http://127.0.0.1:9527/imagesWeb/2.jpg'" style="width: 100%;height: 100%;object-fit:cover;" /></div>
+          <div style="width: 100%;height: 550px"><img :src="'http://127.0.0.1:9527/imagesWeb/3.jpg'" style="width: 100%;height: 100%;object-fit:cover;" /></div>
+          <div style="width: 100%;height: 550px"><img :src="'http://127.0.0.1:9527/imagesWeb/4.jpg'" style="width: 100%;height: 100%;object-fit:cover;" /></div>
+        </a-carousel>
       </a-col>
-      <a-col :span="2">
-        <a-button type="primary" style="margin-top: 2px;margin-left: 10px" @click="newsNext">下一页</a-button>
+      <a-col :span="6">
+        <a-card hoverable :loading="loading" :bordered="false" title="公告信息" style="height: 550px;overflow: auto">
+          <div style="padding: 0 22px">
+            <a-list item-layout="vertical" :pagination="false" :data-source="bulletinList">
+              <a-list-item slot="renderItem" key="item.title" slot-scope="item, index">
+                <template slot="actions">
+              <span key="message">
+                <a-icon type="message" style="margin-right: 8px" />
+                {{ item.date }}
+              </span>
+                </template>
+                <a-list-item-meta :description="item.content" style="font-size: 14px">
+                  <a slot="title">{{ item.title }}</a>
+                </a-list-item-meta>
+              </a-list-item>
+            </a-list>
+          </div>
+        </a-card>
       </a-col>
     </a-row>
     <a-row :gutter="8" class="head-info">
@@ -46,12 +63,14 @@
     <a-row :gutter="8" class="count-info">
       <a-card class="head-info-card" style="width: 80%;margin: 0 auto"></a-card>
     </a-row>
+    <home></home>
   </div>
 </template>
 <script>
 import HeadInfo from '@/views/common/HeadInfo'
 import {mapState} from 'vuex'
 import moment from 'moment'
+import Home from './common/home.vue'
 moment.locale('zh-cn')
 function getBase64 (file) {
   return new Promise((resolve, reject) => {
@@ -64,9 +83,10 @@ function getBase64 (file) {
 
 export default {
   name: 'HomePage',
-  components: {HeadInfo},
+  components: {Home, HeadInfo},
   data () {
     return {
+      loading: false,
       newsPage: 0,
       newsContent: '',
       newsList: [],
@@ -76,7 +96,14 @@ export default {
       userRole: '',
       userDept: '',
       lastLoginTime: '',
-      welcomeMessage: ''
+      welcomeMessage: '',
+      pagination: {
+        onChange: page => {
+          console.log(page)
+        },
+        pageSize: 2
+      },
+      bulletinList: []
     }
   },
   watch: {
@@ -107,69 +134,14 @@ export default {
       let time = hour < 6 ? '早上好' : (hour <= 11 ? '上午好' : (hour <= 13 ? '中午好' : (hour <= 18 ? '下午好' : '晚上好')))
       return `${time}，${this.user.username}`
     },
-    timeFormat (time) {
-      var nowTime = new Date()
-      var day = nowTime.getDate()
-      var hours = parseInt(nowTime.getHours())
-      var minutes = nowTime.getMinutes()
-      // 开始分解付入的时间
-      var timeday = time.substring(8, 10)
-      var timehours = parseInt(time.substring(11, 13))
-      var timeminutes = time.substring(14, 16)
-      // eslint-disable-next-line camelcase
-      var d_day = Math.abs(day - timeday)
-      // eslint-disable-next-line camelcase
-      var d_hours = hours - timehours
-      // eslint-disable-next-line camelcase
-      var d_minutes = Math.abs(minutes - timeminutes)
-      // eslint-disable-next-line camelcase
-      if (d_day <= 1) {
-        // eslint-disable-next-line camelcase
-        switch (d_day) {
-          case 0:
-            // eslint-disable-next-line camelcase
-            if (d_hours === 0 && d_minutes > 0) {
-              // eslint-disable-next-line camelcase
-              return d_minutes + '分钟前'
-              // eslint-disable-next-line camelcase
-            } else if (d_hours === 0 && d_minutes === 0) {
-              return '1分钟前'
-            } else {
-              // eslint-disable-next-line camelcase
-              return Math.abs(d_hours) + '小时前'
-            }
-            // eslint-disable-next-line no-unreachable
-            break
-          case 1:
-            // eslint-disable-next-line camelcase
-            if (d_hours < 0) {
-              // eslint-disable-next-line camelcase
-              return (24 + d_hours) + '小时前'
-            } else {
-              // eslint-disable-next-line camelcase
-              return d_day + '天前'
-            }
-            // eslint-disable-next-line no-unreachable
-            break
-        }
-        // eslint-disable-next-line camelcase
-      } else if (d_day > 1 && d_day < 10) {
-        // eslint-disable-next-line camelcase
-        return d_day + '天前'
-      } else {
-        return time
-      }
-    },
     getNewList () {
       this.$get(`/cos/bulletin-info/list`).then((r) => {
-        this.newsList = r.data.data
-        if (this.newsList.length !== 0) {
-          this.newsContent = `《${this.newsList[0].title}》 ${this.newsList[0].content}`
-        }
+        this.bulletinList = r.data.data
       })
     }
   },
   mounted () {
+    this.getNewList()
     this.welcomeMessage = this.welcome()
     this.$get(`index/${this.user.username}`).then((r) => {
       let data = r.data.data

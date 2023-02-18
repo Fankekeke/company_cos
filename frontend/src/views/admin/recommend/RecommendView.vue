@@ -1,7 +1,15 @@
 <template>
   <a-modal v-model="show" title="专家推荐详情" @cancel="onClose" :width="800">
     <template slot="footer">
-      <a-button key="back" @click="onClose" type="danger">
+      <div v-if="recommendData.status == 1">
+        <a-button key="audit" @click="audit(2)">
+          通过
+        </a-button>
+        <a-button key="audit" @click="audit(3)" type="danger">
+          驳回
+        </a-button>
+      </div>
+      <a-button key="back" @click="onClose" type="danger" v-else>
         关闭
       </a-button>
     </template>
@@ -86,24 +94,6 @@
         </a-col>
       </a-row>
       <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">专家照片</span></a-col>
-        <a-col :span="24">
-          <a-upload
-            name="avatar"
-            action="http://127.0.0.1:9527/file/fileUpload/"
-            list-type="picture-card"
-            :file-list="fileList"
-            @preview="handlePreview"
-            @change="picHandleChange"
-          >
-          </a-upload>
-          <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-            <img alt="example" style="width: 100%" :src="previewImage" />
-          </a-modal>
-        </a-col>
-      </a-row>
-      <br/>
       <br/>
     </div>
   </a-modal>
@@ -158,6 +148,14 @@ export default {
     }
   },
   methods: {
+    audit (status) {
+      this.$get(`/cos/expert-recommend/audit`, {
+        status,
+        auditId: this.recommendData.id
+      }).then((r) => {
+        this.$emit('success')
+      })
+    },
     imagesInit (images) {
       if (images !== null && images !== '') {
         let imageList = []

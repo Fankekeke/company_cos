@@ -12,10 +12,12 @@
       <a-row :gutter="20">
         <a-col :span="12">
           <a-form-item label='所属专家' v-bind="formItemLayout">
-            <a-input v-decorator="[
-            'title',
+            <a-select v-decorator="[
+            'expertCode',
             { rules: [{ required: true, message: '请输入所属专家!' }] }
-            ]"/>
+            ]" allowClear>
+              <a-select-option v-for="(item, index) in expertList" :key="index" :value="item.code">{{ item.name }}</a-select-option>
+            </a-select>
           </a-form-item>
         </a-col>
         <a-col :span="12">

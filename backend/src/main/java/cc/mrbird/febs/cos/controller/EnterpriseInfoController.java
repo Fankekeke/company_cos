@@ -41,6 +41,17 @@ public class EnterpriseInfoController {
         return R.ok(enterpriseInfoService.selectEnterprisePage(page, enterpriseInfo));
     }
 
+    @GetMapping("/list/{key}")
+    public R listByKey(@PathVariable("key") String key) {
+        return R.ok(enterpriseInfoService.list(Wrappers.<EnterpriseInfo>lambdaQuery()
+                .like(StrUtil.isNotEmpty(key), EnterpriseInfo::getName, key).or()
+                .like(StrUtil.isNotEmpty(key), EnterpriseInfo::getAbbreviation, key).or()
+                .like(StrUtil.isNotEmpty(key), EnterpriseInfo::getCreditCode, key).or()
+                .like(StrUtil.isNotEmpty(key), EnterpriseInfo::getNature, key).or()
+                .like(StrUtil.isNotEmpty(key), EnterpriseInfo::getBusinessScope, key).or()
+                .like(StrUtil.isNotEmpty(key), EnterpriseInfo::getIndustry, key)));
+    }
+
     /**
      * 下载模板
      */
