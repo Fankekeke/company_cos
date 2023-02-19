@@ -7,14 +7,6 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="专家名称"
-                :labelCol="{span: 4}"
-                :wrapperCol="{span: 18, offset: 2}">
-                <a-input v-model="queryParams.expertName"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
                 label="项目名称"
                 :labelCol="{span: 4}"
                 :wrapperCol="{span: 18, offset: 2}">
@@ -343,10 +335,12 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      if (params.readStatus === undefined) {
-        delete params.readStatus
+      if (!this.currentUser.userCode) {
+        params.expertCode = '-999999'
+      } else {
+        params.expertCode = this.currentUser.userCode
       }
-      this.$get('/cos/expert-product/page', {
+      this.$get('/cos/expert-product/page/expert', {
         ...params
       }).then((r) => {
         let data = r.data.data

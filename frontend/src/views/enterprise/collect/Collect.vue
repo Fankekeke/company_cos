@@ -13,14 +13,6 @@
                 <a-input v-model="queryParams.expertName"/>
               </a-form-item>
             </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="项目名称"
-                :labelCol="{span: 4}"
-                :wrapperCol="{span: 18, offset: 2}">
-                <a-input v-model="queryParams.productName"/>
-              </a-form-item>
-            </a-col>
           </div>
           <span style="float: right; margin-top: 3px;">
             <a-button type="primary" @click="search">查询</a-button>
@@ -31,7 +23,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
+        <!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -44,14 +36,9 @@
                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                :scroll="{ x: 900 }"
                @change="handleTableChange">
-        <template slot="productNameShow" slot-scope="text, record">
+        <template slot="avatarShow" slot-scope="text, record">
           <template>
-            <a-tooltip>
-              <template slot="title">
-                {{ record.productName }}
-              </template>
-              {{ record.productName.slice(0, 6) }} ...
-            </a-tooltip>
+            <img alt="头像" :src="'static/avatar/' + text">
           </template>
         </template>
         <template slot="contentShow" slot-scope="text, record">
@@ -60,52 +47,25 @@
               <template slot="title">
                 {{ record.content }}
               </template>
-              {{ record.content.slice(0, 10) }} ...
-            </a-tooltip>
-          </template>
-        </template>
-        <template slot="researchShow" slot-scope="text, record">
-          <template>
-            <a-tooltip>
-              <template slot="title">
-                {{ record.research }}
-              </template>
-              {{ record.research.slice(0, 10) }} ...
-            </a-tooltip>
-          </template>
-        </template>
-        <template slot="technologyShow" slot-scope="text, record">
-          <template>
-            <a-tooltip>
-              <template slot="title">
-                {{ record.technology }}
-              </template>
-              {{ record.technology.slice(0, 10) }} ...
+              {{ record.content.slice(0, 30) }} ...
             </a-tooltip>
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="cloud" @click="view(record)" title="详 情"></a-icon>
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
+          <a-icon type="cloud" @click="handleExpertViewOpen(record)" title="详 情"></a-icon>
         </template>
       </a-table>
     </div>
-    <product-add
-      :productAddVisiable="productAdd.visiable"
-      @close="productClose"
-      @success="productSuccess">
-    </product-add>
-    <product-edit
-      ref="productEdit"
-      @close="handleProductEditClose"
-      @success="handleProductEditSuccess"
-      :productEditVisiable="productEdit.visiable">
-    </product-edit>
-    <product-view
-      @close="handleProductViewClose"
-      :productShow="productView.visiable"
-      :productData="productView.data">
-    </product-view>
+    <expert-view
+      @close="handleExpertViewClose"
+      :expertShow="expertView.visiable"
+      :expertData="expertView.data">
+    </expert-view>
+    <user-view
+      @close="handleUserViewClose"
+      :userShow="userView.visiable"
+      :userData="userView.data">
+    </user-view>
   </a-card>
 </template>
 
@@ -113,25 +73,21 @@
 import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
-import ProductView from './ProductView.vue'
-import ProductAdd from './ProductAdd.vue'
-import ProductEdit from './ProductEdit.vue'
+import ExpertView from '../../admin/expert/ExpertProductView.vue'
 moment.locale('zh-cn')
 
 export default {
   name: 'User',
-  components: {RangeDate, ProductView, ProductAdd, ProductEdit},
+  components: {ExpertView, RangeDate},
   data () {
     return {
-      productEdit: {
-        visiable: false
-      },
-      productView: {
+      expertView: {
         visiable: false,
         data: null
       },
-      productAdd: {
-        visiable: false
+      userView: {
+        visiable: false,
+        data: null
       },
       advanced: false,
       queryParams: {},
@@ -171,36 +127,8 @@ export default {
           }
         }
       }, {
-        title: '项目名称',
-        dataIndex: 'productName',
-        scopedSlots: {customRender: 'productNameShow'}
-      }, {
-        title: '图册',
-        dataIndex: 'images',
-        customRender: (text, record, index) => {
-          if (!record.images) return <a-avatar shape="square" icon="user" />
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images } />
-            </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images } />
-          </a-popover>
-        }
-      }, {
-        title: '内容研究',
-        dataIndex: 'content',
-        scopedSlots: {customRender: 'contentShow'}
-      }, {
-        title: '内容研究',
-        dataIndex: 'research',
-        scopedSlots: {customRender: 'researchShow'}
-      }, {
-        title: '关键技术',
-        dataIndex: 'technology',
-        scopedSlots: {customRender: 'technologyShow'}
-      }, {
-        title: '创建时间',
-        dataIndex: 'createDate',
+        title: '工作单位',
+        dataIndex: 'employer',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -208,6 +136,31 @@ export default {
             return '- -'
           }
         }
+      }, {
+        title: '职位',
+        dataIndex: 'position',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '专家头像',
+        dataIndex: 'expertImages',
+        customRender: (text, record, index) => {
+          if (!record.expertImages) return <a-avatar shape="square" icon="user" />
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user" src={ 'static/avatar/' + record.expertImages } />
+            </template>
+            <a-avatar shape="square" icon="user" src={ 'static/avatar/' + record.expertImages } />
+          </a-popover>
+        }
+      }, {
+        title: '收藏时间',
+        dataIndex: 'createDate'
       }, {
         title: '操作',
         dataIndex: 'operation',
@@ -219,35 +172,18 @@ export default {
     this.fetch()
   },
   methods: {
-    edit (record) {
-      this.$refs.productEdit.setFormValues(record)
-      this.productEdit.visiable = true
+    handleExpertViewOpen (record) {
+      this.$get('/cos/expert-info/detail/code/' + record.expertCode).then((r) => {
+        this.expertView.data = r.data.data
+        this.expertView.visiable = true
+      })
     },
-    handleProductEditClose () {
-      this.productEdit.visiable = false
-    },
-    handleProductEditSuccess () {
-      this.productEdit.visiable = false
-      this.$message.success('添加成功')
-      this.fetch()
-    },
-    productClose () {
-      this.productAdd.visiable = false
-    },
-    productSuccess () {
-      this.productAdd.visiable = false
-      this.$message.success('添加成功')
-      this.fetch()
-    },
-    add () {
-      this.productAdd.visiable = true
+    handleExpertViewClose () {
+      this.expertView.visiable = false
     },
     view (row) {
-      this.productView.data = row
-      this.productView.visiable = true
-    },
-    handleProductViewClose () {
-      this.productView.visiable = false
+      this.userView.data = row
+      this.userView.visiable = true
     },
     handleUserViewClose () {
       this.userView.visiable = false
@@ -273,7 +209,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/expert-product/' + ids).then(() => {
+          that.$delete('/cos/collect-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -343,10 +279,12 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      if (params.readStatus === undefined) {
-        delete params.readStatus
+      if (!this.currentUser.userCode) {
+        params.enterpriseCode = '-999999'
+      } else {
+        params.enterpriseCode = this.currentUser.userCode
       }
-      this.$get('/cos/expert-product/page', {
+      this.$get('/cos/collect-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

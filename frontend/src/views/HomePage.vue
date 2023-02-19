@@ -120,7 +120,11 @@ export default {
     }
   },
   methods: {
-    cleanMessage () {
+    cleanMessage (id) {
+      this.$get(`/cos/notify-info/setReadStatus/${id}`).then((r) => {
+        this.expertList = r.data.data
+        this.getNewList()
+      })
     },
     async handlePreview (file) {
       if (!file.url && !file.preview) {

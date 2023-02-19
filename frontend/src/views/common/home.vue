@@ -1,9 +1,12 @@
 <template>
   <a-row :gutter="20" style="width: 81%;margin: 0 auto;font-family: SimHei">
     <a-col :span="18">
-      <a-row>
+      <a-row style="margin-top: 15px">
         <a-col :span="24">
-          <a-col style="margin-bottom: 15px"><i style="font-size: 23px;color: #000c17">专家</i></a-col>
+          <a-col style="margin-bottom: 15px">
+            <i style="font-size: 23px;color: #000c17">专家</i>
+            <a style="font-size:13px;margin-left: 15px" @click="$router.push('/exview')">-> 更多</a>
+          </a-col>
           <a-col>
             <a-row :gutter="15">
               <a-col span="8" v-for="(item, index) in expertList" :key="index">
@@ -33,7 +36,10 @@
           </a-col>
         </a-col>
         <a-col :span="24" style="margin-top: 20px">
-          <a-col style="margin-bottom: 15px"><i style="font-size: 23px;color: #000c17">企业</i></a-col>
+          <a-col style="margin-bottom: 15px">
+            <i style="font-size: 23px;color: #000c17">企业</i>
+            <a style="font-size:13px;margin-left: 15px" @click="$router.push('/epview')">-> 更多</a>
+          </a-col>
           <a-col>
             <a-row :gutter="15">
               <a-col span="8" v-for="(item, index) in enterpriseList" :key="index">

@@ -73,30 +73,13 @@ public class TreeUtil {
             return null;
         }
 
-        List<VueRouter<T>> topRoutess = new ArrayList<>();
-        VueRouter<T> router1 = new VueRouter<>();
-        router1.setPath("/epview");
-        router1.setName("企业信息");
-        router1.setComponent("enterprise/Enterprise");
-        router1.setIcon("none");
-        router1.setMeta(new RouterMeta(true, false));
-        topRoutess.add(router1);
-
-        VueRouter<T> router2 = new VueRouter<>();
-        router2.setPath("/exview");
-        router2.setName("专家信息");
-        router2.setComponent("expert/Expert");
-        router2.setIcon("none");
-        router2.setMeta(new RouterMeta(true, false));
-        topRoutess.add(router2);
-
         List<VueRouter<T>> topRoutes = new ArrayList<>();
         VueRouter<T> router = new VueRouter<>();
-        router.setName("企业&专家");
+        router.setName("主页");
         router.setPath("/home");
         router.setComponent("HomePageView");
         router.setIcon("home");
-        router.setChildren(topRoutess);
+        router.setChildren(null);
         router.setMeta(new RouterMeta(false, true));
         topRoutes.add(router);
 
@@ -119,6 +102,30 @@ public class TreeUtil {
                 }
             }
         });
+
+        router = new VueRouter<>();
+        router.setPath("/profile");
+        router.setName("个人中心");
+        router.setComponent("personal/Profile");
+        router.setIcon("none");
+        router.setMeta(new RouterMeta(true, false));
+        topRoutes.add(router);
+
+        router = new VueRouter<>();
+        router.setPath("/epview");
+        router.setName("企业信息");
+        router.setComponent("enterprise/Enterprise");
+        router.setIcon("none");
+        router.setMeta(new RouterMeta(true, false));
+        topRoutes.add(router);
+
+        router = new VueRouter<>();
+        router.setPath("/exview");
+        router.setName("专家信息");
+        router.setComponent("expert/Expert");
+        router.setIcon("none");
+        router.setMeta(new RouterMeta(true, false));
+        topRoutes.add(router);
 
         ArrayList<VueRouter<T>> list = new ArrayList<>();
         VueRouter<T> root = new VueRouter<>();

@@ -53,6 +53,17 @@ public class EnterpriseInfoController {
     }
 
     /**
+     * 根据编号查询企业信息
+     *
+     * @param enterpriseCode 企业编号
+     * @return 结果
+     */
+    @GetMapping("/detail/code/{enterpriseCode}")
+    public R detail(@PathVariable("enterpriseCode") String enterpriseCode) {
+        return R.ok(enterpriseInfoService.getOne(Wrappers.<EnterpriseInfo>lambdaQuery().eq(EnterpriseInfo::getCode, enterpriseCode)));
+    }
+
+    /**
      * 下载模板
      */
     @GetMapping("/template")

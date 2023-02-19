@@ -36,6 +36,18 @@ public class CollectInfoController {
     }
 
     /**
+     * 分页获取收藏信息
+     *
+     * @param page        分页对象
+     * @param collectInfo 收藏信息
+     * @return 结果
+     */
+    @GetMapping("/pageByCode")
+    public R pageByCode(Page<CollectInfo> page, CollectInfo collectInfo) {
+        return R.ok(collectInfoService.selectCollectPage(page, collectInfo));
+    }
+
+    /**
      * 根据企业编号获取收藏专家信息
      *
      * @param enterpriseCode 企业编号

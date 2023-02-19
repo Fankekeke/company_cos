@@ -27,6 +27,9 @@
         <if test="expertProduct.productName != null and expertProduct.productName != ''">
             AND ep.product_name LIKE CONCAT('%',#{expertProduct.productName},'%')
         </if>
+        <if test="expertProduct.expertCode != null and expertProduct.expertCode != ''">
+            AND ep.expert_code LIKE CONCAT('%',#{expertProduct.expertCode},'%')
+        </if>
         order by
         ep.create_date desc
     </select>

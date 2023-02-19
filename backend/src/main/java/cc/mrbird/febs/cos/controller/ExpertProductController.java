@@ -5,6 +5,7 @@ import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.ExpertProduct;
 import cc.mrbird.febs.cos.service.IExpertProductService;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,21 @@ public class ExpertProductController {
      */
     @GetMapping("/page")
     public R page(Page<ExpertProduct> page, ExpertProduct expertProduct) {
+        return R.ok(expertProductService.selectExpertProductPage(page, expertProduct));
+    }
+
+    /**
+     * 分页获取项目成果信息
+     *
+     * @param page          分页对象
+     * @param expertProduct 项目成果信息
+     * @return 结果
+     */
+    @GetMapping("/page/expert")
+    public R pageExpert(Page<ExpertProduct> page, ExpertProduct expertProduct) {
+        if (StrUtil.isEmpty(expertProduct.getExpertCode())) {
+            expertProduct.setExpertCode("-999999");
+        }
         return R.ok(expertProductService.selectExpertProductPage(page, expertProduct));
     }
 

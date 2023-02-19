@@ -6,6 +6,50 @@
       </a-button>
     </template>
     <div style="font-size: 13px;font-family: SimHei">
+      <div style="font-size: 13px;font-family: SimHei" v-if="expertData !== null">
+        <a-row style="padding-left: 24px;padding-right: 24px;">
+          <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">专家信息</span></a-col>
+          <a-col :span="8"><b>专家姓名：</b>
+            {{ expertData.name }}
+          </a-col>
+          <a-col :span="8"><b>民族：</b>
+            {{ expertData.nationality }}
+          </a-col>
+          <a-col :span="8"><b>性别：</b>
+            {{ expertData.sex }}
+          </a-col>
+        </a-row>
+        <br/>
+        <a-row style="padding-left: 24px;padding-right: 24px;">
+          <a-col :span="8"><b>政治面貌：</b>
+            {{ expertData.politicalStatus }}
+          </a-col>
+          <a-col :span="8"><b>籍贯：</b>
+            {{ expertData.nativePlace }}
+          </a-col>
+          <a-col :span="8"><b>工作单位：</b>
+            {{ expertData.employer }}
+          </a-col>
+        </a-row>
+        <br/>
+        <a-row style="padding-left: 24px;padding-right: 24px;">
+          <a-col :span="8"><b>职务：</b>
+            {{ expertData.position }}
+          </a-col>
+          <a-col :span="16"><b>通讯地址：</b>
+            {{ expertData.address }}
+          </a-col>
+          <br/>
+          <br/>
+          <a-col :span="8"><b>手机号：</b>
+            {{ expertData.phone }}
+          </a-col>
+          <a-col :span="8"><b>专业方向一级：</b>
+            {{ expertData.levelOne }}
+          </a-col>
+        </a-row>
+        <br/>
+      </div>
       <a-collapse default-active-key="1" :bordered="false" v-if="expertProductList.length !== 0">
         <a-collapse-panel :header="item.productName" :style="customStyle" v-for="(item, index) in expertProductList" :key="index">
           <a-row style="padding-left: 24px;padding-right: 24px;font-size: 13px;font-family: SimHei">

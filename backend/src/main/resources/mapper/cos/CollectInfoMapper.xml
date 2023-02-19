@@ -11,6 +11,8 @@
         ci.create_date,
         ei.name as expertName,
         ei.images as expertImages,
+        ei.employer,
+        ei.`position`,
         ei2.name as enterpriseName,
         ei2.images as enterpriseImages
         from
@@ -27,6 +29,9 @@
         </if>
         <if test="collectInfo.enterpriseName != null and collectInfo.enterpriseName != ''">
             AND ei2.name LIKE CONCAT('%',#{collectInfo.enterpriseName},'%')
+        </if>
+        <if test="collectInfo.enterpriseCode != null and collectInfo.enterpriseCode != ''">
+            AND ci.enterprise_code LIKE CONCAT('%',#{collectInfo.enterpriseCode},'%')
         </if>
         order by
         ci.create_date desc

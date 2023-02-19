@@ -15,7 +15,7 @@
             <a-select v-decorator="[
             'expertCode',
             { rules: [{ required: true, message: '请输入所属专家!' }] }
-            ]">
+            ]" disabled>
               <a-select-option v-for="(item, index) in expertList" :key="index" :value="item.code">{{ item.name }}</a-select-option>
             </a-select>
           </a-form-item>
@@ -123,6 +123,15 @@ export default {
   },
   mounted () {
     this.getExpertList()
+  },
+  watch: {
+    productAddVisiable: function (value) {
+      if (value) {
+        setTimeout(() => {
+          this.form.setFieldsValue({expertCode: this.currentUser.userCode})
+        }, 100)
+      }
+    }
   },
   methods: {
     getExpertList () {
