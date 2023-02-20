@@ -18,6 +18,7 @@
     "enquire.js": "^2.1.6",
     "vue": "^2.5.17",
     "vue-apexcharts": "^1.2.7",
+    "vue-beautiful-chat": "^2.5.0",
     "vue-router": "^3.0.1",
     "vuedraggable": "^2.16.0",
     "vuex": "^3.0.1"
