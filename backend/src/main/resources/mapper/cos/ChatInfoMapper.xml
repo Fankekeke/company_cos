@@ -48,7 +48,8 @@
         </if>
         <if test="flag != null and flag == 2">
             ei.name,
-            ei.images
+            ei.images,
+            ei.`position`
         </if>
         from
         chat_info ci
@@ -95,9 +96,9 @@
         expert_code =
         #{ expertCode } AND enterprise_code = #{ enterpriseCode } ) mi
         left join expert_info ei on
-        (ei.code = ci.expert_code)
+        (ei.code = mi.expert_code)
         left join enterprise_info ei2 on
-        (ei2.code = ci.enterprise_code)
+        (ei2.code = mi.enterprise_code)
         ORDER BY mi.create_date asc
     </select>
 </mapper>
