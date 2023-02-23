@@ -11,7 +11,6 @@
           <span style="margin-left: 35px;font-size: 15px">
             {{ item.name }}
           </span>
-          <span style="font-size: 13px">【{{ item.position }}】</span>
         </a-menu-item>
       </a-menu>
       <div style="text-align: center;margin-top: 50px" v-else>
@@ -81,7 +80,7 @@ export default {
     selectContactPerson () {
       this.$get(`/cos/chat-info/contact/person`, {
         userCode: this.user.userCode,
-        flag: 2
+        flag: 1
       }).then((r) => {
         this.contactList = r.data.data
       })
@@ -104,7 +103,7 @@ export default {
       this.$post(`/cos/chat-info`, {
         expertCode: this.currentItem.expertCode,
         enterpriseCode: this.currentItem.enterpriseCode,
-        type: 2,
+        type: 1,
         content: this.contentValue
       }).then((r) => {
         this.contentValue = ''
