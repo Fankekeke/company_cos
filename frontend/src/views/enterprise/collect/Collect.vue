@@ -153,9 +153,9 @@ export default {
           if (!record.expertImages) return <a-avatar shape="square" icon="user" />
           return <a-popover>
             <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'static/avatar/' + record.expertImages } />
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.expertImages } />
             </template>
-            <a-avatar shape="square" icon="user" src={ 'static/avatar/' + record.expertImages } />
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.expertImages } />
           </a-popover>
         }
       }, {

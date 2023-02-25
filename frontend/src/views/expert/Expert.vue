@@ -11,6 +11,7 @@
         :data-source="expertList"
       >
         <a-list-item slot="renderItem" slot-scope="item, index">
+          <a slot="actions" @click="collect(item)">收藏</a>
           <a slot="actions" @click="chat(item)">沟通</a>
           <a slot="actions" @click="detailView(item)">详情</a>
           <a-list-item-meta>
@@ -68,10 +69,16 @@
 
 <script>
 import ExpertView from '../admin/expert/ExpertProductView.vue'
-
+import {mapState} from 'vuex'
 export default {
   name: 'Expert',
   components: {ExpertView},
+  computed: {
+    ...mapState({
+      multipage: state => state.setting.multipage,
+      user: state => state.account.user
+    })
+  },
   data () {
     return {
       expertView: {
@@ -87,6 +94,28 @@ export default {
     this.getEnterpriseList()
   },
   methods: {
+    collect (item) {
+      this.$get(`/cos/collect-info/collectExpert/check`, {
+        enterpriseCode: this.user.userCode,
+        expertCode: item.code
+      }).then((r) => {
+        if (r.data.data === false) {
+          this.$message.warn('该专家已在收藏列表中')
+        } else {
+          this.$message.success('收藏成功')
+        }
+      })
+    },
+    chat (item) {
+      this.$post(`/cos/chat-info`, {
+        expertCode: item.code,
+        enterpriseCode: this.user.userCode,
+        type: 2,
+        content: '你好'
+      }).then((r) => {
+        this.$router.push('/enterprise/chat')
+      })
+    },
     onSearch (value) {
       this.getEnterpriseList(value)
     },

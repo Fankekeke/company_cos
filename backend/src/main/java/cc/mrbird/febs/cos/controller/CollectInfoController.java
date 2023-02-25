@@ -5,6 +5,7 @@ import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.CollectInfo;
 import cc.mrbird.febs.cos.service.ICollectInfoService;
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,19 @@ public class CollectInfoController {
     @GetMapping("/pageByCode")
     public R pageByCode(Page<CollectInfo> page, CollectInfo collectInfo) {
         return R.ok(collectInfoService.selectCollectPage(page, collectInfo));
+    }
+
+    @GetMapping("/collectExpert/check")
+    public R collectExpert(@RequestParam("enterpriseCode") String enterpriseCode, @RequestParam("expertCode") String expertCode) {
+        Integer count = collectInfoService.count(Wrappers.<CollectInfo>lambdaQuery().eq(CollectInfo::getEnterpriseCode, enterpriseCode).eq(CollectInfo::getExpertCode, expertCode));
+        if (count >= 1) {
+            return R.ok(false);
+        }
+        CollectInfo collectInfo = new CollectInfo();
+        collectInfo.setEnterpriseCode(enterpriseCode);
+        collectInfo.setExpertCode(expertCode);
+        collectInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        return R.ok(collectInfoService.save(collectInfo));
     }
 
     /**

@@ -68,10 +68,16 @@
 
 <script>
 import EnterpriseView from '../admin/enterprise/EnterpriseView.vue'
-
+import {mapState} from 'vuex'
 export default {
   name: 'Enterprise',
   components: {EnterpriseView},
+  computed: {
+    ...mapState({
+      multipage: state => state.setting.multipage,
+      user: state => state.account.user
+    })
+  },
   data () {
     return {
       enterpriseView: {
@@ -87,6 +93,16 @@ export default {
     this.getEnterpriseList()
   },
   methods: {
+    chat (item) {
+      this.$post(`/cos/chat-info`, {
+        expertCode: this.user.userCode,
+        enterpriseCode: item.code,
+        type: 1,
+        content: '你好'
+      }).then((r) => {
+        this.$router.push('/expert/chat')
+      })
+    },
     onSearch (value) {
       this.getEnterpriseList(value)
     },
