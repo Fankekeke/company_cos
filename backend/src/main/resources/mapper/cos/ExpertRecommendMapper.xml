@@ -26,7 +26,8 @@
         er.profile,
         er.create_date,
         er.recommend_name,
-        er.status
+        er.status,
+        er.user_id
         from
         expert_recommend er
         where
@@ -36,6 +37,9 @@
         </if>
         <if test="recommend.position != null and recommend.position != ''">
             AND er.position LIKE CONCAT('%',#{recommend.position},'%')
+        </if>
+        <if test="recommend.userId != null and recommend.userId != ''">
+            AND er.user_id = #{recommend.userId}
         </if>
         order by
         er.create_date desc

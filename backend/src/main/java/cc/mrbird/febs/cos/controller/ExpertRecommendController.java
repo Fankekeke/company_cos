@@ -2,10 +2,14 @@ package cc.mrbird.febs.cos.controller;
 
 
 import cc.mrbird.febs.common.utils.R;
+import cc.mrbird.febs.cos.entity.EnterpriseInfo;
 import cc.mrbird.febs.cos.entity.ExpertRecommend;
 import cc.mrbird.febs.cos.entity.vo.ExpertRecommendVo;
+import cc.mrbird.febs.cos.service.IEnterpriseInfoService;
 import cc.mrbird.febs.cos.service.IExpertRecommendService;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,8 @@ import java.util.List;
 public class ExpertRecommendController {
 
     private final IExpertRecommendService expertRecommendService;
+
+    private final IEnterpriseInfoService enterpriseInfoService;
 
     /**
      * 分页获取专家推荐信息
@@ -77,6 +83,12 @@ public class ExpertRecommendController {
      */
     @PostMapping
     public R save(ExpertRecommendVo expertRecommend) {
+        if (StrUtil.isNotEmpty(expertRecommend.getCode())) {
+            EnterpriseInfo enterpriseInfo = enterpriseInfoService.getOne(Wrappers.<EnterpriseInfo>lambdaQuery().eq(EnterpriseInfo::getCode, expertRecommend.getCode()));
+            if (enterpriseInfo != null) {
+                expertRecommend.setRecommendName(enterpriseInfo.getName());
+            }
+        }
         expertRecommend.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(expertRecommendService.recommendBatch(expertRecommend));
     }

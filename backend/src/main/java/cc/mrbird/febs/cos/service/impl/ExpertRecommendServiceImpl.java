@@ -59,6 +59,10 @@ public class ExpertRecommendServiceImpl extends ServiceImpl<ExpertRecommendMappe
      */
     @Override
     public boolean auditExpertRecommend(Integer auditId, Integer status) {
+        if (status == 2) {
+            ExpertRecommend expertRecommend = this.getById(auditId);
+            expertInfoService.update(Wrappers.<ExpertInfo>lambdaUpdate().set(ExpertInfo::getOpenFlag, 1).eq(ExpertInfo::getCode, expertRecommend.getCode()));
+        }
         return this.update(Wrappers.<ExpertRecommend>lambdaUpdate().set(ExpertRecommend::getStatus, status).eq(ExpertRecommend::getId, auditId));
     }
 

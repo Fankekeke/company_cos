@@ -42,7 +42,7 @@ public class EnterpriseInfoController {
     }
 
     @GetMapping("/list/{key}")
-    public R listByKey(@PathVariable("key") String key) {
+    public R listByKey(@PathVariable(value = "key", required = false) String key) {
         return R.ok(enterpriseInfoService.list(Wrappers.<EnterpriseInfo>lambdaQuery()
                 .like(StrUtil.isNotEmpty(key), EnterpriseInfo::getName, key).or()
                 .like(StrUtil.isNotEmpty(key), EnterpriseInfo::getAbbreviation, key).or()

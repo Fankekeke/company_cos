@@ -47,9 +47,7 @@ export default {
     flex-direction: column;
     height: 100vh;
     overflow: auto;
-    background-color: #2d76c8;
-    background-image: url(/static/img/shadow_light.png), url(//static.v2ex.com/bgs/pixels.png);
-    background-repeat: repeat-x, repeat;
+    background: #f1f1f1 no-repeat center 110px;
     .content {
       padding: 32px 0;
       flex: 1;

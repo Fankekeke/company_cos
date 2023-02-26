@@ -40,8 +40,8 @@ public class ExpertInfoController {
         return R.ok(expertInfoService.selectExpertPage(page, expertInfo));
     }
 
-    @GetMapping("/list/{key}")
-    public R listByKey(@PathVariable("key") String key) {
+    @GetMapping("/key/list/{key}")
+    public R listByKey(@PathVariable(value = "key", required = false) String key) {
         return R.ok(expertInfoService.list(Wrappers.<ExpertInfo>lambdaQuery()
                 .like(StrUtil.isNotEmpty(key), ExpertInfo::getName, key).or()
                 .like(StrUtil.isNotEmpty(key), ExpertInfo::getPoliticalStatus, key).or()
@@ -49,6 +49,11 @@ public class ExpertInfoController {
                 .like(StrUtil.isNotEmpty(key), ExpertInfo::getPosition, key).or()
                 .like(StrUtil.isNotEmpty(key), ExpertInfo::getLevelOne, key).or()
                 .like(StrUtil.isNotEmpty(key), ExpertInfo::getLevelTwo, key).eq(ExpertInfo::getOpenFlag, 1)));
+    }
+
+    @GetMapping("/key/list")
+    public R list() {
+        return R.ok(expertInfoService.list(Wrappers.<ExpertInfo>lambdaQuery().eq(ExpertInfo::getOpenFlag, 1)));
     }
 
     /**
@@ -105,11 +110,6 @@ public class ExpertInfoController {
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
         return R.ok(expertInfoService.getById(id));
-    }
-
-    @GetMapping("/list")
-    public R list() {
-        return R.ok(expertInfoService.list());
     }
 
     /**

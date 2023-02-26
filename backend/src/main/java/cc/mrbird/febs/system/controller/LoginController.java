@@ -163,7 +163,7 @@ public class LoginController {
     public void registUser(
             @NotBlank(message = "{required}") String username,
             @NotBlank(message = "{required}") String password,
-            @NotBlank(message = "{required}") String code,
+            String code,
             @NotBlank(message = "{required}") Integer flag) throws Exception {
         this.userService.registUser(username, password, code, flag);
     }

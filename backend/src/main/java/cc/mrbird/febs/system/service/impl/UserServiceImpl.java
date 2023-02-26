@@ -221,7 +221,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         ur.setUserId(user.getUserId());
         switch (flag) {
             case 1:
-                ur.setRoleId(75L);
+                ur.setRoleId(77L);
                 break;
             case 2:
                 if (StrUtil.isNotEmpty(code) && enterpriseInfoService.getOne(Wrappers.<EnterpriseInfo>lambdaQuery().eq(EnterpriseInfo::getCode, code)) == null) {
@@ -229,7 +229,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 }
                 String enterpriseCode = enterpriseInfoService.enterpriseRegister(code);
                 user.setUserCode(enterpriseCode);
-                ur.setRoleId(76L);
+                ur.setRoleId(75L);
                 break;
             case 3:
                 if (StrUtil.isNotEmpty(code) && !expertInfoService.checkExpert(code)) {
@@ -237,7 +237,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 }
                 String expertCode = expertInfoService.expertRegister(code);
                 user.setUserCode(expertCode);
-                ur.setRoleId(77L);
+                ur.setRoleId(76L);
                 break;
             default:
         }

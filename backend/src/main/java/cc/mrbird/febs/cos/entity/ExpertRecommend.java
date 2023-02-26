@@ -45,7 +45,7 @@ public class ExpertRecommend implements Serializable {
     /**
      * 性别
      */
-    private Integer sex;
+    private String sex;
 
     /**
      * 政治面貌
@@ -137,4 +137,5 @@ public class ExpertRecommend implements Serializable {
      */
     private String code;
 
+    private Integer userId;
 }
