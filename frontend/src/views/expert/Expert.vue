@@ -130,7 +130,7 @@ export default {
       if (key === undefined || key === null) {
         key = ''
       }
-      this.$get(`/cos/expert-info/list/${key}`).then((r) => {
+      this.$get(`/cos/expert-info/key/list/${key}`).then((r) => {
         this.expertList = r.data.data
       })
     }

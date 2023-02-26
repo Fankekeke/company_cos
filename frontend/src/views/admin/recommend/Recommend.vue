@@ -155,18 +155,6 @@ export default {
           }
         }
       }, {
-        title: '头像',
-        dataIndex: 'avatar',
-        customRender: (text, record, index) => {
-          if (!record.avatar) return <a-avatar shape="square" icon="user" />
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'static/avatar/' + record.avatar } />
-            </template>
-            <a-avatar shape="square" icon="user" src={ 'static/avatar/' + record.avatar } />
-          </a-popover>
-        }
-      }, {
         title: '政治面貌',
         dataIndex: 'politicalStatus',
         customRender: (text, row, index) => {

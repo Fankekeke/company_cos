@@ -126,7 +126,7 @@ export default {
   },
   methods: {
     getExpertList () {
-      this.$get(`/cos/expert-info/list`).then((r) => {
+      this.$get(`/cos/expert-info/key/list`).then((r) => {
         this.expertList = r.data.data
       })
     },

@@ -3,6 +3,22 @@
     <div style="text-align: left;font-size: 14px;margin-bottom: 30px"><b>企智对接系统</b></div>
     <div class="user-layout-register">
       <a-form ref="formRegister" :autoFormCreate="(form)=>{this.form = form}" id="formRegister">
+        <a-form-item>
+          <a-radio-group default-value="1" v-model="registType" button-style="solid">
+            <a-radio-button value="1">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;游客&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </a-radio-button>
+            <a-radio-button value="2">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;企业&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </a-radio-button>
+            <a-radio-button value="3">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;专家&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </a-radio-button>
+          </a-radio-group>
+        </a-form-item>
+        <a-form-item>
+          <a-input type="text" v-model="userCode" placeholder="验证编号" v-if="registType !== 'c'"></a-input>
+        </a-form-item>
         <a-divider orientation="left"><span style="font-size: 12px">账户注册</span></a-divider>
         <a-form-item
           fieldDecoratorId="email"
@@ -75,6 +91,8 @@ export default {
   components: {},
   data () {
     return {
+      registType: '1',
+      userCode: '',
       form: null,
       username: '',
       password: '',
@@ -182,9 +200,11 @@ export default {
     handleSubmit () {
       this.form.validateFields((err, values) => {
         if (!err) {
-          this.$post('regist', {
+          this.$post('registUser', {
             username: this.username,
-            password: this.password
+            password: this.password,
+            flag: this.registType,
+            code: this.userCode
           }).then(() => {
             this.$message.success('注册成功')
             this.returnLogin()

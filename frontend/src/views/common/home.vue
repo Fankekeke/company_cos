@@ -9,7 +9,7 @@
           </a-col>
           <a-col>
             <a-row :gutter="15">
-              <a-col span="8" v-for="(item, index) in expertList" :key="index">
+              <a-col span="8" v-for="(item, index) in expertList" :key="index" style="margin-bottom: 15px">
                 <a-card hoverable>
                   <template slot="actions" class="ant-card-actions">
                     <a-icon key="cloud" type="cloud" @click="handleExpertProductOpen(item)"/>
@@ -42,7 +42,7 @@
           </a-col>
           <a-col>
             <a-row :gutter="15">
-              <a-col span="8" v-for="(item, index) in enterpriseList" :key="index">
+              <a-col span="8" v-for="(item, index) in enterpriseList" :key="index" style="margin-bottom: 15px">
                 <a-card hoverable>
                   <template slot="actions" class="ant-card-actions">
                     <a-icon key="ellipsis" type="ellipsis" @click="handleEnterpriseViewOpen(item)"/>
@@ -148,7 +148,7 @@ export default {
       if (key === undefined || key === null) {
         key = ''
       }
-      this.$get(`/cos/expert-info/list/${key}`).then((r) => {
+      this.$get(`/cos/expert-info/key/list/${key}`).then((r) => {
         this.expertList = r.data.data
       })
     },
