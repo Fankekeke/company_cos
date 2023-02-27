@@ -5,6 +5,8 @@ import PageView from '@/views/common/PageView'
 import LoginView from '@/views/login/Common'
 import EmptyPageView from '@/views/common/EmptyPageView'
 import HomePageView from '@/views/HomePage'
+import ExView from '@/views/expert/Expert'
+import EpView from '@/views/enterprise/Enterprise'
 import db from 'utils/localstorage'
 import request from 'utils/request'
 
@@ -15,6 +17,21 @@ let constRouter = [
     path: '/index',
     name: '首页',
     redirect: '/home'
+  },
+  {
+    path: '/home',
+    name: '首页',
+    component: HomePageView
+  },
+  {
+    path: '/exview',
+    name: '专家',
+    component: ExView
+  },
+  {
+    path: '/epview',
+    name: '企业',
+    component: EpView
   },
   {
     path: '/login',
@@ -33,30 +50,33 @@ let asyncRouter
 
 // 导航守卫，渲染动态路由
 router.beforeEach((to, from, next) => {
-  console.log(to)
-  if (whiteList.indexOf(to.path) !== -1) {
+  if (to.path === '/home' || to.path === '/exview' || to.path === '/epview') {
     next()
-  }
-  let token = db.get('USER_TOKEN')
-  let user = db.get('USER')
-  let userRouter = get('USER_ROUTER')
-  if (token.length && user) {
-    if (!asyncRouter) {
-      if (!userRouter) {
-        request.get(`menu/${user.username}`).then((res) => {
-          asyncRouter = res.data
-          save('USER_ROUTER', asyncRouter)
-          go(to, next)
-        })
-      } else {
-        asyncRouter = userRouter
-        go(to, next)
-      }
-    } else {
+  } else {
+    if (whiteList.indexOf(to.path) !== -1) {
       next()
     }
-  } else {
-    next('/login')
+    let token = db.get('USER_TOKEN')
+    let user = db.get('USER')
+    let userRouter = get('USER_ROUTER')
+    if (token.length && user) {
+      if (!asyncRouter) {
+        if (!userRouter) {
+          request.get(`menu/${user.username}`).then((res) => {
+            asyncRouter = res.data
+            save('USER_ROUTER', asyncRouter)
+            go(to, next)
+          })
+        } else {
+          asyncRouter = userRouter
+          go(to, next)
+        }
+      } else {
+        next()
+      }
+    } else {
+      next('/login')
+    }
   }
 })
 
