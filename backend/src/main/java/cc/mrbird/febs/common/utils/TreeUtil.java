@@ -112,8 +112,8 @@ public class TreeUtil {
         topRoutes.add(router);
 
         router = new VueRouter<>();
-        router.setPath("/epview");
-        router.setName("企业信息");
+        router.setPath("/");
+        router.setName("企epview业信息");
         router.setComponent("enterprise/Enterprise");
         router.setIcon("none");
         router.setMeta(new RouterMeta(true, false));
