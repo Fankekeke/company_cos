@@ -4,6 +4,24 @@
       <!-- 搜索区域 -->
       <a-form layout="horizontal">
         <a-row :gutter="15">
+          <div :class="advanced ? null: 'fold'">
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="专家名称"
+                :labelCol="{span: 4}"
+                :wrapperCol="{span: 18, offset: 2}">
+                <a-input v-model="queryParams.name"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="岗位"
+                :labelCol="{span: 4}"
+                :wrapperCol="{span: 18, offset: 2}">
+                <a-input v-model="queryParams.position"/>
+              </a-form-item>
+            </a-col>
+          </div>
           <span style="float: right; margin-top: 3px;">
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
@@ -13,13 +31,13 @@
     </div>
     <div>
       <div class="operator">
-        <!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
+        <a-button type="primary" ghost @click="expertOpen">推荐</a-button>
 <!--        <a-button @click="batchDelete">删除</a-button>-->
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
                :columns="columns"
-               :rowKey="record => record.userId"
+               :rowKey="record => record.id"
                :dataSource="dataSource"
                :pagination="pagination"
                :loading="loading"
@@ -31,17 +49,32 @@
             <img alt="头像" :src="'static/avatar/' + text">
           </template>
         </template>
+        <template slot="contentShow" slot-scope="text, record">
+          <template>
+            <a-tooltip>
+              <template slot="title">
+                {{ record.content }}
+              </template>
+              {{ record.content.slice(0, 30) }} ...
+            </a-tooltip>
+          </template>
+        </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon v-if="record.status == 0" type="caret-up" @click="audit(record.userId, 1)" title="up" style="margin-right: 10px"></a-icon>
-          <a-icon v-if="record.status == 1" type="caret-down" @click="audit(record.userId, 0)" title="down" style="margin-right: 10px"></a-icon>
+          <a-icon type="cloud" @click="view(record)" title="详 情"></a-icon>
         </template>
       </a-table>
     </div>
-    <user-view
+    <recommend-view
       @close="handleUserViewClose"
-      :userShow="userView.visiable"
-      :userData="userView.data">
-    </user-view>
+      @success="handleUserViewSuccess"
+      :recommendShow="userView.visiable"
+      :recommendData="userView.data">
+    </recommend-view>
+    <expert-commend
+      :expertVisiable="expertAdd.visiable"
+      @close="expertClose"
+      @success="expertSuccess">
+    </expert-commend>
   </a-card>
 </template>
 
@@ -49,14 +82,18 @@
 import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
-import UserView from './UserView'
+import RecommendView from './RecommendView.vue'
+import ExpertCommend from './ExpertCommend.vue'
 moment.locale('zh-cn')
 
 export default {
   name: 'User',
-  components: {UserView, RangeDate},
+  components: {ExpertCommend, RangeDate, RecommendView},
   data () {
     return {
+      expertAdd: {
+        visiable: false
+      },
       userView: {
         visiable: false,
         data: null
@@ -86,23 +123,122 @@ export default {
     }),
     columns () {
       return [{
-        title: '用户ID',
-        dataIndex: 'userId'
+        title: '推荐人',
+        dataIndex: 'recommendName'
       }, {
-        title: '用户昵称',
-        dataIndex: 'userName'
+        title: '专家名称',
+        dataIndex: 'name'
       }, {
-        title: '密码',
-        dataIndex: 'password',
+        title: '审核状态',
+        dataIndex: 'status',
         customRender: (text, row, index) => {
-          return '******'
+          switch (text) {
+            case 1:
+              return <a-tag>正在审核</a-tag>
+            case 2:
+              return <a-tag color='green'>审核通过</a-tag>
+            case 3:
+              return <a-tag color='red'>驳回</a-tag>
+            default:
+              return '- -'
+          }
         }
       }, {
-        title: '上次登陆时间',
-        dataIndex: 'loginDate'
+        title: '民族',
+        dataIndex: 'nationality',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
-        title: '创建时间',
-        dataIndex: 'createDate'
+        title: '性别',
+        dataIndex: 'sex',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '头像',
+        dataIndex: 'avatar',
+        customRender: (text, record, index) => {
+          if (!record.avatar) return <a-avatar shape="square" icon="user" />
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user" src={ 'static/avatar/' + record.avatar } />
+            </template>
+            <a-avatar shape="square" icon="user" src={ 'static/avatar/' + record.avatar } />
+          </a-popover>
+        }
+      }, {
+        title: '政治面貌',
+        dataIndex: 'politicalStatus',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '籍贯',
+        dataIndex: 'nativePlace',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '工作单位',
+        dataIndex: 'employer',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '职务',
+        dataIndex: 'position',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '专业方向一级',
+        dataIndex: 'levelOne',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '专业方向二级',
+        dataIndex: 'levelTwo',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '操作',
+        dataIndex: 'operation',
+        scopedSlots: {customRender: 'operation'}
       }]
     }
   },
@@ -110,11 +246,16 @@ export default {
     this.fetch()
   },
   methods: {
-    audit (userId, flag) {
-      this.$post('/cos/post-info/user/audit', {userId, flag}).then((r) => {
-        this.$message.success('修改成功！')
-        this.fetch()
-      })
+    expertOpen () {
+      this.expertAdd.visiable = true
+    },
+    expertClose () {
+      this.expertAdd.visiable = false
+    },
+    expertSuccess () {
+      this.expertAdd.visiable = false
+      this.$message.success('添加成功')
+      this.fetch()
     },
     view (row) {
       this.userView.data = row
@@ -122,6 +263,11 @@ export default {
     },
     handleUserViewClose () {
       this.userView.visiable = false
+    },
+    handleUserViewSuccess () {
+      this.userView.visiable = false
+      this.fetch()
+      this.$message.success('审核成功')
     },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
@@ -144,7 +290,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/user-info/' + ids).then(() => {
+          that.$delete('/cos/expert-recommend/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -201,6 +347,7 @@ export default {
       })
     },
     fetch (params = {}) {
+      console.log(this.currentUser)
       // 显示loading
       this.loading = true
       if (this.paginationInfo) {
@@ -214,10 +361,8 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      if (params.status === undefined) {
-        delete params.status
-      }
-      this.$get('/cos/expert-info/user/page', {
+      params.userId = this.currentUser.userId
+      this.$get('/cos/expert-recommend/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

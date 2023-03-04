@@ -45,4 +45,19 @@
         order by
         ei.create_date desc
     </select>
+
+    <!-- 分页获取游客信息 -->
+    <select id="selectUserPage" resultType="java.util.LinkedHashMap">
+        SELECT
+            tu.USER_ID as userId,
+            tu.USERNAME as userName,
+            tu.CREATE_TIME as createDate,
+            tu.LAST_LOGIN_TIME as loginDate
+        FROM
+            t_user tu
+                LEFT JOIN t_user_role tur ON ( tur.USER_ID = tu.USER_ID )
+        WHERE
+            1 = 1
+          AND tur.ROLE_ID = 77
+    </select>
 </mapper>

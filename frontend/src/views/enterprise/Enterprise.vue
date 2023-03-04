@@ -11,7 +11,7 @@
         :data-source="enterpriseList"
       >
         <a-list-item slot="renderItem" slot-scope="item, index">
-          <a slot="actions" @click="chat(item)">沟通</a>
+          <a slot="actions" v-if="user.roleId == 75" @click="chat(item)">沟通</a>
           <a slot="actions" @click="handleEnterpriseViewOpen(item)">详情</a>
           <a-list-item-meta>
             <div slot="description" style="font-family: SimHei;font-size: 14px;margin-top: 20px">

@@ -11,8 +11,8 @@
         :data-source="expertList"
       >
         <a-list-item slot="renderItem" slot-scope="item, index">
-          <a slot="actions" @click="collect(item)">收藏</a>
-          <a slot="actions" @click="chat(item)">沟通</a>
+          <a slot="actions" v-if="user.roleId == 76" @click="collect(item)">收藏</a>
+          <a slot="actions" v-if="user.roleId == 76" @click="chat(item)">沟通</a>
           <a slot="actions" @click="detailView(item)">详情</a>
           <a-list-item-meta>
             <div slot="description" style="font-family: SimHei;font-size: 14px;margin-top: 20px">
@@ -91,6 +91,7 @@ export default {
     }
   },
   mounted () {
+    console.log(this.user)
     this.getEnterpriseList()
   },
   methods: {

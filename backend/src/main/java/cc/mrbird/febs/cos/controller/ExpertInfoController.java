@@ -5,6 +5,7 @@ import cc.mrbird.febs.common.utils.FileDownloadUtils;
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.ExpertInfo;
 import cc.mrbird.febs.cos.service.IExpertInfoService;
+import cc.mrbird.febs.system.domain.User;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -38,6 +39,18 @@ public class ExpertInfoController {
     @GetMapping("/page")
     public R page(Page<ExpertInfo> page, ExpertInfo expertInfo) {
         return R.ok(expertInfoService.selectExpertPage(page, expertInfo));
+    }
+
+    /**
+     * 分页获取游客信息
+     *
+     * @param page     分页对象
+     * @param user 对象
+     * @return 结果
+     */
+    @GetMapping("/user/page")
+    public R userPage(Page<User> page, User user) {
+        return R.ok(expertInfoService.selectUserPage(page, user));
     }
 
     @GetMapping("/key/list/{key}")

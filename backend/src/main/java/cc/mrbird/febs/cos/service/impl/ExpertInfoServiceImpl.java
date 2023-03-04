@@ -10,6 +10,7 @@ import cc.mrbird.febs.cos.entity.ExpertRecommend;
 import cc.mrbird.febs.cos.entity.vo.ExpertRecommendVo;
 import cc.mrbird.febs.cos.service.IExpertInfoService;
 import cc.mrbird.febs.cos.service.IExpertProductService;
+import cc.mrbird.febs.system.domain.User;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
@@ -48,6 +49,18 @@ public class ExpertInfoServiceImpl extends ServiceImpl<ExpertInfoMapper, ExpertI
     @Override
     public IPage<LinkedHashMap<String, Object>> selectExpertPage(Page<ExpertInfo> page, ExpertInfo expertInfo) {
         return baseMapper.selectExpertPage(page, expertInfo);
+    }
+
+    /**
+     * 分页获取游客信息
+     *
+     * @param page     分页对象
+     * @param user 对象
+     * @return 结果
+     */
+    @Override
+    public IPage<LinkedHashMap<String, Object>> selectUserPage(Page<User> page, User user) {
+        return baseMapper.selectUserPage(page, user);
     }
 
     /**

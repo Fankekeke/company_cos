@@ -205,6 +205,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @param flag 标识（1.普通用户 2.企业 3.专家）
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void registUser(String username, String password, String code, Integer flag) throws Exception {
         User user = new User();
         user.setPassword(MD5Util.encrypt(username, password));

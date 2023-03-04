@@ -164,7 +164,7 @@ public class LoginController {
             @NotBlank(message = "{required}") String username,
             @NotBlank(message = "{required}") String password,
             String code,
-            @NotBlank(message = "{required}") Integer flag) throws Exception {
+            Integer flag) throws Exception {
         this.userService.registUser(username, password, code, flag);
     }
 

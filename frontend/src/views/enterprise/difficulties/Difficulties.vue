@@ -4,6 +4,24 @@
       <!-- 搜索区域 -->
       <a-form layout="horizontal">
         <a-row :gutter="15">
+          <div :class="advanced ? null: 'fold'">
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="技术难点"
+                :labelCol="{span: 4}"
+                :wrapperCol="{span: 18, offset: 2}">
+                <a-input v-model="queryParams.name"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="技术类型"
+                :labelCol="{span: 4}"
+                :wrapperCol="{span: 18, offset: 2}">
+                <a-input v-model="queryParams.type"/>
+              </a-form-item>
+            </a-col>
+          </div>
           <span style="float: right; margin-top: 3px;">
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
@@ -13,55 +31,82 @@
     </div>
     <div>
       <div class="operator">
-        <!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
-<!--        <a-button @click="batchDelete">删除</a-button>-->
+        <a-button type="primary" ghost @click="add">新增</a-button>
+        <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
                :columns="columns"
-               :rowKey="record => record.userId"
+               :rowKey="record => record.id"
                :dataSource="dataSource"
                :pagination="pagination"
                :loading="loading"
                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                :scroll="{ x: 900 }"
                @change="handleTableChange">
-        <template slot="avatarShow" slot-scope="text, record">
+        <template slot="titleShow" slot-scope="text, record">
           <template>
-            <img alt="头像" :src="'static/avatar/' + text">
+            <a-tooltip>
+              <template slot="title">
+                {{ record.title }}
+              </template>
+              {{ record.title.slice(0, 8) }} ...
+            </a-tooltip>
+          </template>
+        </template>
+        <template slot="contentShow" slot-scope="text, record">
+          <template>
+            <a-tooltip>
+              <template slot="title">
+                {{ record.content }}
+              </template>
+              {{ record.content.slice(0, 30) }} ...
+            </a-tooltip>
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon v-if="record.status == 0" type="caret-up" @click="audit(record.userId, 1)" title="up" style="margin-right: 10px"></a-icon>
-          <a-icon v-if="record.status == 1" type="caret-down" @click="audit(record.userId, 0)" title="down" style="margin-right: 10px"></a-icon>
+          <a-icon type="project" theme="twoTone" twoToneColor="#4a9ff5" @click="handleUserViewOpen(record)" title="详情"></a-icon>
         </template>
       </a-table>
     </div>
-    <user-view
+    <difficulties-add
+      v-if="bulletinAdd.visiable"
+      @close="handleBulletinAddClose"
+      @success="handleBulletinAddSuccess"
+      :bulletinAddVisiable="bulletinAdd.visiable">
+    </difficulties-add>
+    <difficulties-view
       @close="handleUserViewClose"
-      :userShow="userView.visiable"
-      :userData="userView.data">
-    </user-view>
+      :recommendShow="userView.visiable"
+      :recommendData="userView.data">
+    </difficulties-view>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
+import DifficultiesAdd from './DifficultiesAdd.vue'
+import DifficultiesView from './DifficultiesView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
-import UserView from './UserView'
 moment.locale('zh-cn')
 
 export default {
-  name: 'User',
-  components: {UserView, RangeDate},
+  name: 'difficulties',
+  components: {DifficultiesAdd, DifficultiesView, RangeDate},
   data () {
     return {
+      advanced: false,
+      bulletinAdd: {
+        visiable: false
+      },
+      bulletinEdit: {
+        visiable: false
+      },
       userView: {
         visiable: false,
         data: null
       },
-      advanced: false,
       queryParams: {},
       filteredInfo: null,
       sortedInfo: null,
@@ -86,23 +131,37 @@ export default {
     }),
     columns () {
       return [{
-        title: '用户ID',
-        dataIndex: 'userId'
+        title: '技术难点',
+        dataIndex: 'name'
       }, {
-        title: '用户昵称',
-        dataIndex: 'userName'
-      }, {
-        title: '密码',
-        dataIndex: 'password',
+        title: '技术类型',
+        dataIndex: 'type',
         customRender: (text, row, index) => {
-          return '******'
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
         }
       }, {
-        title: '上次登陆时间',
-        dataIndex: 'loginDate'
+        title: '内容',
+        dataIndex: 'content',
+        scopedSlots: { customRender: 'contentShow' },
+        width: 600
       }, {
-        title: '创建时间',
-        dataIndex: 'createDate'
+        title: '发布时间',
+        dataIndex: 'createDate',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '操作',
+        dataIndex: 'operation',
+        scopedSlots: {customRender: 'operation'}
       }]
     }
   },
@@ -110,24 +169,41 @@ export default {
     this.fetch()
   },
   methods: {
-    audit (userId, flag) {
-      this.$post('/cos/post-info/user/audit', {userId, flag}).then((r) => {
-        this.$message.success('修改成功！')
-        this.fetch()
-      })
-    },
-    view (row) {
-      this.userView.data = row
-      this.userView.visiable = true
-    },
     handleUserViewClose () {
       this.userView.visiable = false
+    },
+    handleUserViewOpen (value) {
+      this.userView.visiable = true
+      this.userView.data = value
     },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
     toggleAdvanced () {
       this.advanced = !this.advanced
+    },
+    add () {
+      this.bulletinAdd.visiable = true
+    },
+    handleBulletinAddClose () {
+      this.bulletinAdd.visiable = false
+    },
+    handleBulletinAddSuccess () {
+      this.bulletinAdd.visiable = false
+      this.$message.success('新增公告成功')
+      this.search()
+    },
+    edit (record) {
+      this.$refs.bulletinEdit.setFormValues(record)
+      this.bulletinEdit.visiable = true
+    },
+    handleBulletinEditClose () {
+      this.bulletinEdit.visiable = false
+    },
+    handleBulletinEditSuccess () {
+      this.bulletinEdit.visiable = false
+      this.$message.success('修改公告成功')
+      this.search()
     },
     handleDeptChange (value) {
       this.queryParams.deptId = value || ''
@@ -144,7 +220,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/user-info/' + ids).then(() => {
+          that.$delete('/cos/difficulties-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -214,10 +290,8 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      if (params.status === undefined) {
-        delete params.status
-      }
-      this.$get('/cos/expert-info/user/page', {
+      params.userId = this.currentUser.userId
+      this.$get('/cos/difficulties-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data
