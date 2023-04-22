@@ -123,7 +123,7 @@ export default {
     }
   },
   mounted () {
-    this.getExpertList()
+    // this.getExpertList()
   },
   watch: {
     productAddVisiable: function (value) {

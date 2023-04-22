@@ -25,6 +25,7 @@ public class DifficultiesInfoController {
 
     private final IDifficultiesInfoService difficultiesInfoService;
 
+
     /**
      * 分页获取技术难点信息
      *
@@ -34,10 +35,7 @@ public class DifficultiesInfoController {
      */
     @GetMapping("/page")
     public R page(Page<DifficultiesInfo> page, DifficultiesInfo difficultiesInfo) {
-        return R.ok(difficultiesInfoService.page(page, Wrappers.<DifficultiesInfo> lambdaQuery()
-                .like(StrUtil.isNotEmpty(difficultiesInfo.getName()), DifficultiesInfo::getName, difficultiesInfo.getName())
-                .like(StrUtil.isNotEmpty(difficultiesInfo.getType()), DifficultiesInfo::getType, difficultiesInfo.getType())
-                .eq(difficultiesInfo.getUserId() != null, DifficultiesInfo::getUserId, difficultiesInfo.getUserId())));
+        return R.ok(difficultiesInfoService.selectDiffcultiesPage(page, difficultiesInfo));
     }
 
     @GetMapping("/{id}")

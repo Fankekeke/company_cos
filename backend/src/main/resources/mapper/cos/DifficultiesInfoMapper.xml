@@ -2,4 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.cos.dao.DifficultiesInfoMapper">
 
+    <!-- 分页获取技术难点信息 -->
+    <select id="selectDiffcultiesPage" resultType="java.util.LinkedHashMap">
+        SELECT
+            di.*,
+            ei.`name` AS enterpriseName,
+            ei.`code` AS enterpriseCode,
+            ei.images
+        FROM
+            difficulties_info di
+                LEFT JOIN t_user tu ON tu.USER_ID = di.user_id
+                LEFT JOIN enterprise_info ei ON ei.CODE = tu.user_code
+        WHERE 1 = 1
+        <if test="difficultiesInfo.name != null and difficultiesInfo.name != ''">
+            AND di.name LIKE CONCAT('%',#{difficultiesInfo.name},'%')
+        </if>
+        <if test="difficultiesInfo.type != null and difficultiesInfo.type != ''">
+            AND di.type LIKE CONCAT('%',#{difficultiesInfo.type},'%')
+        </if>
+        <if test="difficultiesInfo.userId != null and difficultiesInfo.userId != ''">
+            AND di.user_id= #{difficultiesInfo.userId}
+        </if>
+        order by
+            di.create_date desc
+    </select>
 </mapper>
