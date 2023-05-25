@@ -1,3 +1,85 @@
+### 基于SpringBoot的智企服务系统
+
+#### 安装环境
+
+JAVA 环境 
+
+Node.js环境 [https://nodejs.org/en/] 选择14.17
+
+Yarn 打开cmd， 输入npm install -g yarn !!!必须安装完毕nodejs
+
+Mysql 数据库 [https://blog.csdn.net/qq_40303031/article/details/88935262] 一定要把账户和密码记住
+
+redis
+
+Idea 编译器 [https://blog.csdn.net/weixin_44505194/article/details/104452880]
+
+WebStorm OR VScode 编译器 [https://www.jianshu.com/p/d63b5bae9dff]
+
+#### 采用技术及功能
+
+后端：SpringBoot、MybatisPlus、MySQL、Redis、
+前端：Vue、Apex、Antd、Axios
+
+平台后台：springboot(框架) + redis(缓存中间件) + shiro(权限中间件) + mybatisplus(orm) + restful风格接口 + mysql(数据库)
+
+开发环境：windows10 or windows7 ， vscode or webstorm ， idea + lambok
+
+#### 前台启动方式
+
+安装所需文件 yarn install 
+运行 yarn run dev
+
+### 管理员
+公告信息，聊天记录，企业收藏，企业管理，专家管理，消息通知，项目成果，人才推荐，用户管理
+
+### 企业
+企业信息管理，技术咨询，我的收藏，人才推荐，技术难点
+
+### 专家
+专家信息管理，我的项目，沟通咨询，企业技术难点
+
+### 游客
+人才推荐
+
+#### 默认后台账户密码
+
+[管理员]
+system
+1234qwer
+
+[企业]
+qiye
+1234qwer
+
+[专家]
+zhuanjia
+1234qwer
+
+[游客]
+youke
+1234qwer
+
+#### 项目截图
+
+暂无
+
+#### 演示视频
+
+暂无
+
+#### 获取方式
+
+Email: fan1ke2ke@gmail.com
+
+WeChat: `Storm_Berserker`
+
+`因为要恰饭资源非免费，伸手党勿扰，谢谢理解`
+
+#### 接JAVAWEB毕设，纯原创，价格公道，诚信第一
+
+More info: [悲伤的橘子树](https://berserker287.github.io/)
+
 #### 专家用户：
 1、专家登录：系统采用预定义规则，为每个专家分配一个账号。专家可通过账号登录系统，修改、更新和完善个人信息。
 2、个人信息维护：专家登录后可以维护自己的个人信息。专家的信息包括姓名、民族、个人照片、性别、政治面貌、籍贯、工作单位、职务、通讯地址、手机号、专业方向一级、专业方向二级、出生日期、职称、特殊称谓、邮箱、固定电话、个人简介等。
