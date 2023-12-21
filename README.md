@@ -1,4 +1,4 @@
-### 基于SpringBoot的智企服务系统
+### 基于SpringBoot + Vue的智企服务系统
 
 #### 安装环境
 
